@@ -71,10 +71,10 @@ for time in steps:
 			if random.random() < 0.5:
 				#particle will move, next draw decides direction.
 				lor = random.random()
-				if lor < 0.5 and i != 0 and i != (x_cells - 1): #take this -1 away?):
+				if lor < 0.5 and i != 0 and i != (x_cells - 1):
 					#particle will move left, +1 left cell
 					cells_current[i-1] += 1
-				elif lor > 0.5 and i != 0 and i != (x_cells - 1): #take this -1 away?
+				elif lor > 0.5 and i != 0 and i != (x_cells - 1):
 					#particle will move right, +1 right cell
 					cells_current[i+1] += 1
 				
@@ -99,7 +99,7 @@ for time in steps:
 				#particle will not move
 				cells_current[i] += 1
 	cells = cells_current
-	data += [(time,cells)] #10% increase in speed
+	data += [(time,cells)] #10% increase in speed over .append builtin
 
 #writing data to file...
 filename = 'particles-{0}_xcells-{1}_time-{2}_startpos-{3}.txt'.format(
