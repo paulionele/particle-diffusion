@@ -1,4 +1,5 @@
 import random
+#from os import path
 #import sys
 
 #Defined constants
@@ -72,7 +73,7 @@ for time in steps:
 				#particle will move, next draw decides direction.
 				lor = random.random()
 				if lor < 0.5 and i != 0 and i != (x_cells - 1):
-					#particle will move left, +1 left cell
+					#particle will move left, +1 left cell	#particle will move left, +1 left cell
 					cells_current[i-1] += 1
 				elif lor > 0.5 and i != 0 and i != (x_cells - 1):
 					#particle will move right, +1 right cell
@@ -102,9 +103,16 @@ for time in steps:
 	data += [(time,cells)] #10% increase in speed over .append builtin
 
 #writing data to file...
+#savepath = '/Documents/thesis/particle-diffusion-data/'
 filename = 'particles-{0}_xcells-{1}_time-{2}_startpos-{3}.txt'.format(
 			N,x_cells,end_time,start_pos1)	
 with open(filename,'w') as f:
+	f.write('#First integer is the time step.# \n')
 	for time_step_data in data:
-		f.write(str(time_step_data)+'\n')
+		time = time_step_data[0]
+		data = time_step_data[1]
+		f.write(str(time) + ' ')
+		for i in data:
+			f.write(str(i) + ' ')
+		f.write('\n')
 print('done')
