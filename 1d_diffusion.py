@@ -3,8 +3,8 @@ import random
 #import sys
 
 #Defined constants
-N = 1000       #number of particles
-x_cells = 21    #number of cells in x (just a 1D array for now)
+N = 10000       #number of particles
+x_cells = 80    #number of cells in x (just a 1D array for now)
 end_time = 100  	#number of time steps
 
 steps = [t for t in range(0,end_time)]
@@ -15,7 +15,7 @@ cells = [0*n for n in range(0,x_cells)] #1D array of cells, elements intilized t
 #else:
 #	start_pos1 = int(x_cells/2)
 #	cells[start_pos1]  = N
-start_pos1 = 11
+start_pos1 = 40
 cells[start_pos1] = N
 
 print('Dimensions of array: {m}x{n}'.format(m = x_cells, n = 1))
@@ -73,7 +73,7 @@ for time in steps:
 				#particle will move, next draw decides direction.
 				lor = random.random()
 				if lor < 0.5 and i != 0 and i != (x_cells - 1):
-					#particle will move left, +1 left cell	#particle will move left, +1 left cell
+					#particle will move left, +1 left cell
 					cells_current[i-1] += 1
 				elif lor > 0.5 and i != 0 and i != (x_cells - 1):
 					#particle will move right, +1 right cell
@@ -100,7 +100,7 @@ for time in steps:
 				#particle will not move
 				cells_current[i] += 1
 	cells = cells_current
-	data += [(time,cells)] #10% increase in speed over .append builtin
+	data += [(time,cells)]
 
 #writing data to file...
 #savepath = '/Documents/thesis/particle-diffusion-data/'
