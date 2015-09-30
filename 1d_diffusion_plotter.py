@@ -44,7 +44,8 @@ lt = [0,1,2,5,10,20,50,70,90,110,150,200,250,300,350,400,450,500]
 
 for time in lt:
 	distribution = dists[time]
-	plt.bar(cells,distribution, facecolor='blue', alpha=0.5, align='center')
+	plt.bar(cells,distribution, width=1.0, facecolor='blue', alpha=0.5,
+		align='center')
 	plt.xlim(0,number_cells)
 	plt.ylim(0,max(dists[0]))
 	plt.xlabel('Cells')
