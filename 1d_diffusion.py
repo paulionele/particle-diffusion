@@ -1,13 +1,13 @@
 import random
-#from os import path
+from os import path
 #import sys
 
 #Defined constants
-N = 10000       #number of particles
-x_cells = 80    #number of cells in x (just a 1D array for now)
-end_time = 100  	#number of time steps
+N = 30000       #number of particles
+x_cells = 99    #number of cells in x (just a 1D array for now)
+end_time = 500  	#number of time steps
 
-steps = [t for t in range(0,end_time)]
+steps = [t for t in range(1,end_time + 1)]
 cells = [0*n for n in range(0,x_cells)] #1D array of cells, elements intilized to zero
 #if x_cells % 2 != 0
 #	start_pos1 = int(x_cells/2) + 1
@@ -15,7 +15,7 @@ cells = [0*n for n in range(0,x_cells)] #1D array of cells, elements intilized t
 #else:
 #	start_pos1 = int(x_cells/2)
 #	cells[start_pos1]  = N
-start_pos1 = 40
+start_pos1 = 10
 cells[start_pos1] = N
 
 print('Dimensions of array: {m}x{n}'.format(m = x_cells, n = 1))
@@ -30,7 +30,7 @@ that particular time step).
 
 data = [(t1,[0,0,0,10,0,...]),(t2,[0,0,2,5,3,0,...]),...]
 '''
-data = [(-1,cells)] #need to shift indicies over.
+data = [(0,cells)] #need to shift indicies over.
 
 for time in steps:
 	'''
@@ -103,10 +103,11 @@ for time in steps:
 	data += [(time,cells)]
 
 #writing data to file...
-#savepath = '/Documents/thesis/particle-diffusion-data/'
+savepath = '/home/paul/Documents/thesis/particle-diffusion-data/'
 filename = 'particles-{0}_xcells-{1}_time-{2}_startpos-{3}.txt'.format(
-			N,x_cells,end_time,start_pos1)	
-with open(filename,'w') as f:
+			N,x_cells,end_time,start_pos1)
+fpath = path.join(savepath,filename)	
+with open(fpath,'w') as f:
 	f.write('#First integer is the time step.# \n')
 	for time_step_data in data:
 		time = time_step_data[0]

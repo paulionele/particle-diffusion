@@ -1,7 +1,8 @@
+from os import path
 import matplotlib.pyplot as plt
 #from time import sleep
 #import matplotlib.mlab as mlab
-import matplotlib.animation as animation
+#import matplotlib.animation as animation
 import numpy as np 
 
 '''
@@ -12,8 +13,11 @@ distributions, and an array of values cooresponding to cell numbers for plotting
 
 times = []
 dists = []
-filename = 'particles-10000_xcells-80_time-100_startpos-40.txt'
-with open(filename,'r') as f:
+
+savepath = '/home/paul/Documents/thesis/particle-diffusion-data/'
+filename = 'particles-30000_xcells-99_time-500_startpos-50.txt'
+fpath = path.join(savepath,filename)
+with open(fpath,'r') as f:
 
 	next(f) #move past the preamble to the 'data line' dl
 	dl = f.readline() #read the first line after preamble, get length info
@@ -36,43 +40,20 @@ dists = [[1,2,3,4], [2,3,4,5], [3,4,5,6], ... ]
 The code below is for plotting.
 '''
 
-# def setup_backend(backend='TkAgg'):
-#     import sys
-#     del sys.modules['matplotlib.backends']
-#     del sys.modules['matplotlib.pyplot']
-#     import matplotlib as mpl
-#     mpl.use(backend)  # do this before importing pyplot
-#     import matplotlib.pyplot as plt
-#     return plt
+lt = [0,1,2,5,10,20,50,70,90,110,150,200,250,300,350,400,450,500]
 
-def animate():
-    mu, sigma = 100, 15
-    N = 4
-    x = mu + sigma * np.random.randn(N)
-    rects = plt.bar(range(N), x, align='center')
-    for i in range(50):
-        x = mu + sigma * np.random.randn(N)
-        for rect, h in zip(rects, x):
-            rect.set_height(h)
-        fig.canvas.draw()
+for time in lt:
+	distribution = dists[time]
+	plt.bar(cells,distribution, facecolor='blue', alpha=0.5, align='center')
+	plt.xlim(0,number_cells)
+	plt.ylim(0,max(dists[0]))
+	plt.xlabel('Cells')
+	plt.ylabel('Particles')
+	plt.title('Distribution of Particles at time-step = {0}'.format(str(time)))
+	plt.savefig(savepath + filename[:-4] + '_TIME_{}.png'.format(str(time)))
+	plt.close()
 
-#plt = setup_backend()
-fig = plt.figure()
-win = fig.canvas.manager.window
-win.after(10, animate)
-plt.show()
-
-
-#x and y should have the same length.
-# for time in range(0,len(times)-98):
-# 	distribution = dists[time]
-# 	plt.bar(cells,distribution, facecolor='green',alpha=0.5, align='center')
-# 	plt.xlabel('Cells')
-# 	plt.ylabel('Particles')
-# 	plt.title('Time = {0}'.format(str(time)))
-# 	plt.show()
-# 	plt.clf()
-
+	
 	# add a 'best fit' line
-	#y = mlab.normpdf( bins, distribution_mean, distribution_width)
-	#l = plt.plot(bins, y, 'r--', linewidth=1)
+	# y = mlab.normpdf( bins, distribution_mean, distribution_width)
+	# l = plt.plot(bins, y, 'r--', linewidth=1)
