@@ -20,17 +20,18 @@ something I need to fix.. I like symmetry.
 int main(){
 	//x unit cell length.
 	int xU = xC + xE;
+	int xL = xU*nU;
 	int modx;
 
 	//Index variables for the for-loops, as well as time-step limit.
-	int i
+	int i;
 	int t, tmax = 5000;
 
 	//Stepsize and probabilities for intracellular (0) and extracellular diffusion (1). 
 	float a = 1.0;
-	float pli = 0.3, pri = 0.3, psi = 1.0-pl-pr;
-	float ple = 0.2, pre = 0.2, pse = 1.0-pl1-pr1;
-	float pie = 0.1. pei = 0.1; //Probablities crossing from intra to extra or extra to intra.
+	float pli = 0.3, pri = 0.3, psi = 1.0-pli-pri;
+	float ple = 0.2, pre = 0.2, pse = 1.0-ple-pre;
+	float pie = 0.1, pei = 0.1; //Probablities crossing from intra to extra or extra to intra.
 
 	//Initilizing random variable and variables for MSD calculations.
 	float rnd;
@@ -41,7 +42,7 @@ int main(){
 	float x[N] = {0};
 
 	//Density distribution (rho) and setting the start position.
-	int rho[xL] = {0};
+	----------------------int rho[xL] = {0};
 	rho[(int)SP-1] = N;
 
 	//Some file naming and preparation.
