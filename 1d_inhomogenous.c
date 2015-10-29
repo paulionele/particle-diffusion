@@ -28,10 +28,11 @@ int main(){
 
 	//Stepsize and probabilities for intracellular (0) and extracellular diffusion (1). 
 	float a = 1.0;
-	float pl0 = 0.3, pr0 = 0.3, ps0 = 1.0-pl-pr;
-	float pl1 = 0.2, pr1 = 0.2, ps0 = 1.0-pl1-pr1;
+	float pli = 0.3, pri = 0.3, psi = 1.0-pl-pr;
+	float ple = 0.2, pre = 0.2, pse = 1.0-pl1-pr1;
+	float pie = 0.1. pei = 0.1; //Probablities crossing from intra to extra or extra to intra.
 
-	//Initilizing random variables and variables for MSD calculations.
+	//Initilizing random variable and variables for MSD calculations.
 	float rnd;
 	float sum_x, sum_x2, avg_x, avg_x2;
 
@@ -74,61 +75,67 @@ int main(){
 			//The order of the unit cell can be reversed from here.
 			if(modx < xC){
 				//Perform operations specific to INTRACELLULAR conditions.
+
 				//Check the ith particle position and determine if at boundary.
-				if(sxi != 0 && sxi != (xL-1)){
-					/*Particle is not at boundary, may move left, right, or stay.*/
+				if(modx != 0 && modx != (xU-1)){
+					//Particle is not at inner boundary, may move left, right, or stay.
 					rnd = (float)rand()/(float)RAND_MAX;
-					if(rnd < pl){
-						/*The ith particle moves a distance 'a' to the left.*/
+					if(rnd < pli){
+						//The ith particle moves a distance 'a' to the left.
 						x[i] -= a;
 					}
-					else if(rnd > pl && rnd < (pl + pr)){
-						/*The ith particle moves a distance 'a' to the right.*/
+					else if(rnd > pli && rnd < (pli + pri)){
+						//The ith particle moves a distance 'a' to the right.
 						x[i] += a;
 					}
 				}
-				else if(sxi == 0){
+
+				//Intracellular boundary conditions.
+				else if(modx == 0){
 					rnd = (float)rand()/(float)RAND_MAX;
-					if(rnd < 0.5){
-						/*The ith particle moves a distance 'a' to the right.*/
-						x[i] += a;
+					if(rnd < pie){
+						//The ith particle moves a distance 'a' to the left and through boundary.
+						x[i] -= a;
 					}
 				}
-				else if(sxi == (xL-1)){
+				else if(modx == (xU-1)){
 					rnd = (float)rand()/(float)RAND_MAX;
-					if(rnd < 0.5){
-						/*The ith particle moves a distance 'a' to the left.*/
-						x[i] -= a;
+					if(rnd < pie){
+						//The ith particle moves a distance 'a' to the right and through boundary.
+						x[i] += a;
 					}
 				}
 			}
 			else{
 				//Perform operations specific to EXTRACELLULAR conditions.
+
 				//Check the ith particle position and determine if at boundary.
-				if(sxi != 0 && sxi != (xL-1)){
-					/*Particle is not at boundary, may move left, right, or stay.*/
+				if(modx != 0 && modx != (xU-1)){
+					//Particle is not at boundary, may move left, right, or stay.
 					rnd = (float)rand()/(float)RAND_MAX;
-					if(rnd < pl){
-						/*The ith particle moves a distance 'a' to the left.*/
+					if(rnd < ple){
+						//The ith particle moves a distance 'a' to the left.
 						x[i] -= a;
 					}
-					else if(rnd > pl && rnd < (pl + pr)){
-						/*The ith particle moves a distance 'a' to the right.*/
+					else if(rnd > ple && rnd < (ple + pre)){
+						//The ith particle moves a distance 'a' to the right.
 						x[i] += a;
 					}
 				}
-				else if(sxi == 0){
+
+				//Extracellular boundary conditions.
+				else if(modx == 0){
 					rnd = (float)rand()/(float)RAND_MAX;
-					if(rnd < 0.5){
-						/*The ith particle moves a distance 'a' to the right.*/
-						x[i] += a;
+					if(rnd < pei){
+						//The ith particle moves a distance 'a' to the left and through boundary.
+						x[i] -= a;
 					}
 				}
 				else if(sxi == (xL-1)){
 					rnd = (float)rand()/(float)RAND_MAX;
-					if(rnd < 0.5){
-						/*The ith particle moves a distance 'a' to the left.*/
-						x[i] -= a;
+					if(rnd < pei){
+						//The ith particle moves a distance 'a' to the right and through boundary.
+						x[i] += a;
 					}
 				}
 			}
@@ -143,11 +150,6 @@ int main(){
 			rho[sxi]++; 
 		}
 		
-
-
-
-
-
 		/*Write the cell density data to file. First column is time.*/
 		fprintf(dd, "%d ",t);
 		for(i = 0; i < xL; i++){fprintf(dd, "%d ", rho[i]);}
