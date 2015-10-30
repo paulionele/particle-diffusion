@@ -10,30 +10,30 @@ something I need to fix.. I like symmetry.
 #include "math.h"
 
 // CPP directives.
-#define N 10000  //number of particles
-#define xC 50    //x length of cellular space
-#define xE 10    //x length of extracellular space
-#define nU 1000  //x number of unit cells
-#define SP 500   //x start position of particles
-
+#define N 1000  //number of particles
+#define xC 20    //x length of cellular space
+#define xE 5    //x length of extracellular space
+#define nU 8  //x number of unit cells
 
 int main(){
-	//x unit cell length.
+	//x unit cell length (xU), total array length (xL) and centered start (SP).
 	int xU = xC + xE;
 	int xL = xU*nU;
+	int SP = (int)(xL/2.0);
 	int modx;
 
-	//Index variables for the for-loops, as well as time-step limit.
+	//Index variables for the for-loops and time-step limit.
 	int i;
-	int t, tmax = 5000;
+	int t, tmax = 30;
 
-	//Stepsize and probabilities for intracellular (0) and extracellular diffusion (1). 
+	//Stepsize and probabilities for intracellular (0) and extracellular diffusion (1).
+	//Probablities crossing from intra to extra (pie) or extra to intra (pei). 
 	float a = 1.0;
 	float pli = 0.3, pri = 0.3, psi = 1.0-pli-pri;
 	float ple = 0.2, pre = 0.2, pse = 1.0-ple-pre;
-	float pie = 0.1, pei = 0.1; //Probablities crossing from intra to extra or extra to intra.
+	float pie = 0.1, pei = 0.1; 
 
-	//Initilizing random variable and variables for MSD calculations.
+	//Random variable and variables for MSD calculations.
 	float rnd;
 	float sum_x, sum_x2, avg_x, avg_x2;
 
@@ -42,7 +42,8 @@ int main(){
 	float x[N] = {0};
 
 	//Density distribution (rho) and setting the start position.
-	----------------------int rho[xL] = {0};
+	int *rho;
+	rho = malloc(xL*sizeof(int));
 	rho[(int)SP-1] = N;
 
 	//Some file naming and preparation.
@@ -62,6 +63,7 @@ int main(){
 	//--------------------------------------------------------------------------
 	//Below is where the main work is done.
 	for (t = 0; t < tmax; t++){
+		printf("%d\n",t);
 		sum_x = 0;
 		sum_x2 = 0;
 
@@ -70,8 +72,10 @@ int main(){
 
 		for(i = 0; i < N; i++){
 			//Loop over all particles. sxi: shifted position for ith particle.
+			//The modx value returned is 0:(xU-1). This can be used to determine
+			// if the particle is at a boundary, i.e if modx = 0 or (xU-1).
 			sxi = (int)(x[i] + SP);
-			modx = sxi % xU; //the value returned is 0:(xU-1)
+			modx = sxi % xU;
 
 			//The order of the unit cell can be reversed from here.
 			if(modx < xC){
