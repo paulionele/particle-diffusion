@@ -1,16 +1,10 @@
 /* 
-Diffusion simulation on 1D, inhomogenous lattice. 
+Diffusion simulation on 2D, inhomogenous lattice. 
 
-The code [should] work.
-Boundary conditions, more specifically the probabilities of crossing the bounds 
-are non-physical. The probablities of crossing from higher to lower diffusion
-volumes cannot be the same. They are related by a formula, but not equal.
+Representation of lattice homogeneity.
+10 10 10 10
+00 00 00 00
 
-pei = something
-pie = (De/Di)*pei = (pe/pi)*pei
-
-The unit cell is built so that the overall cell lattice is non-symmetric. That's
-something I need to fix.. I like symmetry.
 */
 
 #include "stdio.h"
@@ -18,47 +12,51 @@ something I need to fix.. I like symmetry.
 #include "math.h"
 #include "string.h"
 
-#define N 500000  //number of particles
-#define xC 10    //x length of cellular space
-#define xE 10  //x length of extracellular space
-#define nU 13  //x number of unit cells
+// Characterizations of entire inhomogenous lattice.
+#define N 500000	//number of particles
+#define xC 10		//x length of cellular space
+#define yC 10		//y length of cellular space
+#define xE 10		//x length of extracellular space
+#define yE 10		//y length of extracellular space
+#define nU 21		//number of unit cells in row
+#define nR 21		//number of rows
 
 int main(){
 	//Index variables for the for-loops and time-step limit.
 	int i;
-	int t, tmax = 8000;
+	int t, tmax = 5000;
 
 	//x unit cell length (xU), total array length (xL) and centered start (SP).
 	int xU = xC + xE;
 	int xL = xU*nU;
-	int SP = (int)(xL/2.0) - 5; //Arbitrarily +5... ?
+	int SP = (int)(xL/2.0)+5;
 
 	///NEW VARIABLES DEFINED....
 	int modx; //Modified x-pos. of ith particle. Returns: [0,xU-1]
-	double testx = 0; //Possible future position of particle. Returns: [0,xL-1]
-	double modtestx = 0;
+	float testx = 0; //Possible future position of particle. Returns: [0,xL-1]
+	float modtestx = 0;
 	int state = 0;
 	int teststate = 0;
 
 	//Stepsize and probabilities for intracellular (0) and extracellular diffusion (1).
 	//Probablities crossing from intra to extra (pie) or extra to intra (pei). 
-	double a = 1.0;
-	double pli = 0.2, pri = 0.2, psi = 1.0-pli-pri; //Intracellular less diffusive.
-	double ple = 0.3, pre = 0.3, pse = 1.0-ple-pre; //Extracellular more diffusive.
+	float a = 1.0;
+	float pli = 0.2, pri = 0.2, psi = 1.0-pli-pri;
+	float ple = 0.3, pre = 0.3, pse = 1.0-ple-pre;
 
 	//For passive transport must be coupled. Active transport, no.
-	double pie = 0.05;
-	double pei = (0.2/0.3)*pie; 
+	float pie = 0.05;
+	float pei = (0.2/0.3)*pie; 
 
 	//Random variable and variables for MSD calculations.
-	double rnd;
-	double sum_x, sum_x2, avg_x, avg_x2;
+	float rnd;
+	float sum_x, sum_x2, avg_x, avg_x2;
 
 	//Shifted index and an array to hold particle positions.
 	int sxi; //is this still sxi? Does that name make sense?
 	int ucop; //unit cell of particle.
 	int ucot; //unit cell of test.
-	double x[N] = {[0 ... (N-1)] = SP}; //designated initializer to set start positions
+	float x[N] = {[0 ... (N-1)] = SP}; //designated initializer to set start positions
 	//for(i = 0; i < N; i++){x[i] = SP;} //initialize with a rolling loop instead.
 
 
@@ -66,8 +64,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/data/1d_inhomogenous_physical_cell_start.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/data/1d_inhomogenous_physical_cell_start_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/data/TEST1.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/data/TEST1-stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -110,7 +108,7 @@ int main(){
 
 			if(state == 1){
 				//Apply intracellular conditions to test particle.
-				rnd = (double)rand()/(double)RAND_MAX;
+				rnd = (float)rand()/(float)RAND_MAX;
 				if (rnd < pli){
 					//Generate position of particle IF to move left.
 					//Off-lattice if testx < 0, x[i] = 0 for that to occur.
@@ -127,7 +125,7 @@ int main(){
 			}
 			else{
 				//Apply extracellular conditions to test particle.
-				rnd = (double)rand()/(double)RAND_MAX;
+				rnd = (float)rand()/(float)RAND_MAX;
 				if (rnd < ple){
 					//Generate position of particle if to move left.
 					testx = x[i] - a;
@@ -164,7 +162,7 @@ int main(){
 				else if(state == 1 && teststate == 0){
 					//Particle is in intracellular region and at boundary.
 					//Draw rnd to determine movement.
-					rnd = (double)rand()/(double)RAND_MAX;
+					rnd = (float)rand()/(float)RAND_MAX;
 					if(rnd < pie)
 						//Particle will cross boundary into extracellular region.
 						x[i] = testx;
@@ -172,7 +170,7 @@ int main(){
 				else{
 					//Particle is in extracellular region and at boundary.
 					//Draw rnd to determine movement.
-					rnd = (double)rand()/(double)RAND_MAX;
+					rnd = (float)rand()/(float)RAND_MAX;
 					if(rnd < pei)
 						//Particle will cross boundary in intracellular region.
 						x[i] = testx;					
@@ -195,8 +193,8 @@ int main(){
 		fprintf(outdists,"\n");
 		
 		//Writing mean-square-displacement data to file.
-		avg_x = sum_x/(double)N;
-		avg_x2 = sum_x2/(double)N;
+		avg_x = sum_x/(float)N;
+		avg_x2 = sum_x2/(float)N;
 		fprintf(outstats, "%f %f %f\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
 	}
 	//return 0;
