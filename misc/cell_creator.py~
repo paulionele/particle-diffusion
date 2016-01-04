@@ -1,6 +1,5 @@
 '''
 This script is functioning as expected.
-Creates a list of values, elements of either 1 or 0 depending on specifications.
 '''
 
 j = 1 #flip the j,k bits to start with cellular or extracellular.

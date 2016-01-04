@@ -4,8 +4,7 @@ the length of the total inhomogenous array exists. The length of the array needs
 to be known and defined through a CPP directive, otherwise a compile-time error
 results. Maybe there is a workaround? AFAIK, everything else works.
 
-All integer numbers used are for demonstration purposes and printf statements
-are for poor mans debugging.
+Solution: probably dynamic memory allocation.
 */
 
 #include "stdio.h"
@@ -21,7 +20,7 @@ int main(){
 	int b;
 	int c;
 
-	/*Counter to deal with problems of mid-level language lol.*/
+	/*Counter to deal with problems of mid-level language.*/
 	int d = 0;
 
 	/*Flip the j,k bits for change starting with intra or extracellular.*/
@@ -32,8 +31,7 @@ int main(){
 	int lec = 2;/*number of cells in extracellular super cell*/
 	int lsc = 7;/*number of super cells, this is okay as the for-loop limit*/
 
-	/*Generated array, the total length including all subcells
-	  needs to be known first and likely initialized in the CPP define directions.*/
+	/*Generated array, the total length including all subcells needs to be known first..*/
 	int ct[n] = {0};
 
 	for(a = 0; a < lsc; a++){
