@@ -4,7 +4,7 @@ particular forward step (unbiased) probability. The calculated diffusion
 coeffcient is returned and written to a file along with its cooresponding 
 probability. A different script is used to plot that relation.
 
-This script needs to *-stats.txt file generated for a particular probablity.
+This script needs to *_stats.txt file generated for a particular probablity.
 This script searches in the data directory for the file.
 CL arguments of the form: python3 1d_diffusion_msd_time_processor *_xxx-stats.txt 
 
@@ -43,27 +43,31 @@ with open(filepath,'r') as f1:
 		msd_values += [float(ls[2])]
 	ts = len(msd_values)
 
-times = np.array(range(1,ts+1))
+times = np.array(range(1, ts + 1)) #note the starting time
 
-#Regression time window. ts: time_start, th: time_halt
+#Regression time window indicies. ts: time_start, th: time_halt
 ts1 = 0
 th1 = 5
 
-#Plotting time window.
+#Plotting time window indicies.
 ts2 = 0
-th2 = ts
+th2 = 5000
 
-#Plotting the computed data.
+
 (slope, B, D) = regression(times[ts1:th1], msd_values[ts1:th1])
 print('The effective diffusion D on [{},{}]: {}'.format(ts1, th1, D))
 
-plt.plot(times[ts2:th2], msd_values[ts2:th2])
-plt.plot(times[ts2:th2], 2*0.2*times[ts2:th2])
-plt.plot(times[ts2:th2], 2*0.05*times[ts2:th2])
+#Plotting the simulation data and other curves.
+plt.plot(times[ts2:th2], msd_values[ts2:th2]) #simulation data
+#plt.plot(times[ts2:th2], slope*times[ts2:th2] + B, '-b')
+plt.plot(times[ts2:th2], 2*0.2*times[ts2:th2], '--r') #cellular
+plt.plot(times[ts2:th2], 2*0.05*times[ts2:th2], '--g') #extracellular
+
 plt.xscale('log')
 plt.yscale('log')
 plt.xlabel('Time')
 plt.ylabel('MSD')
+plt.grid('on')
 plt.show()
 
 #Plot of MSD/t vs. t
