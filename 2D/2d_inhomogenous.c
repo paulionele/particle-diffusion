@@ -44,10 +44,10 @@ int main(){
 	int mody;
 	//Possible future position of particle. Returns: [0,xL-1 or yL-1]
 	double testx = 0;
-	double texty = 0;
+	double testy = 0;
 	//'Modified' possible future position of particle.
 	double modtestx = 0;
-	double modtexty = 0;
+	double modtesty = 0;
 	//State corresponding to particle position; (0: extracellular, 1: cellular).
 	int state = 0;
 	int teststate = 0;
@@ -63,8 +63,8 @@ int main(){
 	int ucoty;
 
 	//Setting the start position of all particles. These arrays hold positions.
-	double x[N] = {[0 ... (N-1)] = SP};
-	double y[N] = {[0 ... (N-1)] = SP};
+	double x[N] = {[0 ... (N-1)] = xSP};
+	double y[N] = {[0 ... (N-1)] = ySP};
 
 	//Particle density distribution 2D array; yL rows and xL columns.
 	int rho[yL][xL];
@@ -92,8 +92,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/data/t000.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/data/t000_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t000.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t000_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -153,22 +153,22 @@ int main(){
 				if (rnd < pnxi){
 					//Generate position if to move -a in x-direction.
 					testx = x[i] - a;
-					testy = y[i]
+					testy = y[i];
 				}
 				else if(rnd < (pnxi + ppxi)){
 					//Generate position if to move +a in x-direction.
 					testx = x[i] + a;
-					testy = y[i]
+					testy = y[i];
 				}
 				else if(rnd < (pnxi + ppxi + pnyi)){
 					//Generate position if to move -a in y-direction.
 					testy = y[i] + a;
-					testx = x[i]
+					testx = x[i];
 				}
 				else if(rnd < (pnxi + ppxi + pnyi + ppyi)){
 					//Generate position if to move +a in y-direction.
 					testy = y[i] - a;
-					testx = x[i]
+					testx = x[i];
 				}
 				else{
 					//Generate position if to stay in current position.
@@ -186,22 +186,22 @@ int main(){
 				if (rnd < pnxe){
 					//Generate position if to move -a in x-direction.
 					testx = x[i] - a;
-					testy = y[i]
+					testy = y[i];
 				}
 				else if(rnd < (pnxe + ppxe)){
 					//Generate position if to move +a in x-direction.
 					testx = x[i] + a;
-					testy = y[i]
+					testy = y[i];
 				}
 				else if(rnd < (pnxe + ppxe + pnye)){
 					//Generate position if to move -a in y-direction.
 					testy = y[i] - a;
-					testx = x[i]
+					testx = x[i];
 				}
 				else if(rnd < (pnxe + ppxe + pnye + ppye)){
 					//Generate position if to move +a in y-direction.
 					testy = y[i] + a;
-					testx = x[i]
+					testx = x[i];
 				}
 				else{
 					//Generate position if to stay in current position.
@@ -315,9 +315,9 @@ int main(){
 			for(i = 0; i < xL; i++){
 				fprintf(outdists, "%d ", rho[j][i]);
 			}
-			fprintf("\n");
+			fprintf(outdists, "\n");
 		}
-		fprintf("\n \n");
+		fprintf(outdists, "\n \n");
 
 		//Writing mean-square-displacement data to file.
 		//avg_x = sum_x/(double)N;
