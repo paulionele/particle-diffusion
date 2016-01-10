@@ -164,7 +164,7 @@ int main(){
 					//Generate position if to move -a in y-direction.
 					testy = y[i] + a;
 					testx = x[i]
-				}				
+				}
 				else if(rnd < (pnxi + ppxi + pnyi + ppyi)){
 					//Generate position if to move +a in y-direction.
 					testy = y[i] - a;
@@ -195,12 +195,12 @@ int main(){
 				}
 				else if(rnd < (pnxe + ppxe + pnye)){
 					//Generate position if to move -a in y-direction.
-					testy = y[i] + a;
+					testy = y[i] - a;
 					testx = x[i]
-				}				
+				}
 				else if(rnd < (pnxe + ppxe + pnye + ppye)){
 					//Generate position if to move +a in y-direction.
-					testy = y[i] - a;
+					testy = y[i] + a;
 					testx = x[i]
 				}
 				else{
@@ -212,12 +212,11 @@ int main(){
 			if(testx != x[i] && testy != y[i]){
 				/*
 				Determine motion of the particle depending on test position.
-				If at absolute lattice limits, do not do anything (no else
-				clause present). The behavior is not reflecting.
+				If particle is not set to move, nothing is done.
 				*/
 				if(testx >= 0 && testx < xL && testy >= 0 && testy < yL){
 					/*
-					Particle is not at absolute array limits.
+					If particle is within absolute array limits...
 					Here is also determined if particle will cross into a new
 					region. This is done by comparing the current and test state.
 					*/
@@ -247,28 +246,48 @@ int main(){
 						in extracellular region. Refer to cell model.
 						*/
 						teststate = 0; //Maybe introduce a different state here?
-
-					//Has the particle moved to a different cell region?
+					}
+					
+					/*
+					Has the particle moved to a different cell region?
+					Particle positions are assigned in the next few if-else
+					clauses depending on current state and future state. This is
+					where particle positions are updated!
+					*/
 					if(state == teststate){
-						//Particle has not moved to different cell region.
+						/*
+						Particle has not moved to different cell region. Simply
+						set particle position to proposed position.
+						*/
 						x[i] = testx;
 						y[i] = testy;
 					}
 					else if(state == 1 && teststate == 0){
-						//Particle is in intracellular region and at boundary.
-						//Draw rnd to determine movement.
+						/*
+						Particle is in intracellular region and at boundary.
+						Future position is possibly extracellular region.
+						Draw random number to determine movement.
+						*/
+
 						rnd = (double)rand()/(double)RAND_MAX;
-						if(rnd < pie)
+						if(rnd < pie){
 							//Particle will cross boundary into extracellular region.
 							x[i] = testx;
+							y[i] = testy;
+						}
 					}
 					else{
-						//Particle is in extracellular region and at boundary.
-						//Draw rnd to determine movement.
+						/*
+						Particle is in extracellular region and at boundary.
+						Future position is possibly intracellular region.
+						Draw random number to determine movement.
+						*/
 						rnd = (double)rand()/(double)RAND_MAX;
-						if(rnd < pei)
+						if(rnd < pei){
 							//Particle will cross boundary in intracellular region.
-							x[i] = testx;					
+							x[i] = testx;
+							y[i] = testy;
+						}					
 					}
 				}
 			}
@@ -279,17 +298,31 @@ int main(){
 			/*Convert particle position to integer and increment particle count 
 			at that	position rho[sxi] by 1 unit.*/
 			sxi = (int)(x[i]);
-			rho[sxi]++; 
+			syi = (int)(y[i]);
+			rho[syi][sxi]++; 
 		}
 		
 		//Writing density distribution data to file.
-		for(i = 0; i < xL; i++){fprintf(outdists, "%d ", rho[i]);}
-		fprintf(outdists,"\n");
+		//for(i = 0; i < xL; i++){fprintf(outdists, "%d ", rho[i]);}
+		//fprintf(outdists,"\n");
 		
+		/*
+		Writing density distribution data to file. Each time step is written as
+		a new matrix with a space between each matrix. Each new line represents
+		a row of data.
+		*/
+		for (j = 0; j < yL; j++){
+			for(i = 0; i < xL; i++){
+				fprintf(outdists, "%d ", rho[j][i]);
+			}
+			fprintf("\n");
+		}
+		fprintf("\n \n");
+
 		//Writing mean-square-displacement data to file.
-		avg_x = sum_x/(double)N;
-		avg_x2 = sum_x2/(double)N;
-		fprintf(outstats, "%f %f %f\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
+		//avg_x = sum_x/(double)N;
+		//avg_x2 = sum_x2/(double)N;
+		//fprintf(outstats, "%f %f %f\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
 	}
 	//return 0;
 }
