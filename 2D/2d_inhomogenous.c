@@ -25,7 +25,7 @@ Representation of lattice inhomogeneity.
 
 int main(){
 	//Index variables; for-loops and time-step limit.
-	int i, j;
+	int i, j, k;
 	int t, tmax = 10;
 
 	//Unit cell dimensions.
@@ -299,7 +299,8 @@ int main(){
 			at that	position rho[sxi] by 1 unit.*/
 			sxi = (int)(x[i]);
 			syi = (int)(y[i]);
-			rho[syi][sxi]++; 
+			rho[syi][sxi]++;
+			printf("Hello %d",i)
 		}
 		
 		//Writing density distribution data to file.
@@ -312,12 +313,12 @@ int main(){
 		a row of data.
 		*/
 		for (j = 0; j < yL; j++){
-			for(i = 0; i < xL; i++){
-				fprintf(outdists, "%d ", rho[j][i]);
+			for(k = 0; k < xL; k++){
+				fprintf(outdists, "%d ", rho[j][k]);
 			}
 			fprintf(outdists, "\n");
 		}
-		fprintf(outdists, "\n \n");
+		fprintf(outdists, "\n");
 
 		//Writing mean-square-displacement data to file.
 		//avg_x = sum_x/(double)N;
