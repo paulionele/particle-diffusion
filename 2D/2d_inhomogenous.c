@@ -10,7 +10,6 @@ Representation of lattice inhomogeneity.
 #include "stdio.h"
 #include "stdlib.h"
 #include "math.h"
-#include "string.h" //IS THIS LIB REQUIRED???
 
 // Parameters for characterization of entire 2D inhomogeneous lattice.
 #define N 100000	//number of particles
@@ -25,7 +24,7 @@ Representation of lattice inhomogeneity.
 
 int main(){
 	//Index variables; for-loops and time-step limit.
-	int i, j, k;
+	int i, j, n, k;
 	int t, tmax = 10;
 
 	//Unit cell dimensions.
@@ -112,14 +111,17 @@ int main(){
 		}
 
 		//Loop over all particles in system.
-		for(i = 0; i < N; i++){
+		for(n = 0; n < N; n++){
 
 			//Determining the unit cell the particle is currently in.
-			ucopx = (int)(x[i]/xU);
-			ucopy = (int)(y[i]/yU);
+			ucopx = (int)(x[n]/xU);
+			ucopy = (int)(y[n]/yU);
 			//Determining position of particle within unit cell.
-			modx = x[i] - ucopx*xU;
-			mody = y[i] - ucopy*yU;
+			modx = x[n] - ucopx*xU;
+			mody = y[n] - ucopy*yU;
+
+			//printf("ucopx: %d ucopy: %d for the %d\n", ucopx, ucopy, n);
+
 
 			//Usage of yC here does not reflect its meaning. Need to fix this.
 			if(mody < yC){
@@ -127,6 +129,7 @@ int main(){
 				Particle is in top half of 2D array and may be in either an
 				intracellular or extracellular region.
 				*/
+				//printf("Hit 1.\n");
 				if(modx < xC){
 					//Particle is currently in intracellular region.
 					state = 1;
@@ -149,32 +152,44 @@ int main(){
 				Test membership of random number to 4 intervals.
 				Each interval represents a different particle direction.
 				*/
+				//printf("Hit 2.\n");
 				rnd = (double)rand()/(double)RAND_MAX;
 				if (rnd < pnxi){
 					//Generate position if to move -a in x-direction.
-					testx = x[i] - a;
-					testy = y[i];
+					testx = x[n] - a;
+					testy = y[n];
+
+				//printf("Hit 3.\n");					
 				}
 				else if(rnd < (pnxi + ppxi)){
 					//Generate position if to move +a in x-direction.
-					testx = x[i] + a;
-					testy = y[i];
+					testx = x[n] + a;
+					testy = y[n];
+
+				//printf("Hit 4.\n");
 				}
 				else if(rnd < (pnxi + ppxi + pnyi)){
 					//Generate position if to move -a in y-direction.
-					testy = y[i] + a;
-					testx = x[i];
+					testy = y[n] - a;
+					testx = x[n];
+
+				//printf("Hit 5.\n");
 				}
 				else if(rnd < (pnxi + ppxi + pnyi + ppyi)){
 					//Generate position if to move +a in y-direction.
-					testy = y[i] - a;
-					testx = x[i];
+					testy = y[n] + a;
+					testx = x[n];
+
+				//printf("Hit 6.\n");
 				}
 				else{
 					//Generate position if to stay in current position.
-					testx = x[i];
-					testy = y[i];
+					testx = x[n];
+					testy = y[n];
+
+				//printf("Hit 7.\n");
 				}
+				//printf("Hit fin \n\n");
 			}
 			else{
 				/*
@@ -185,35 +200,41 @@ int main(){
 				rnd = (double)rand()/(double)RAND_MAX;
 				if (rnd < pnxe){
 					//Generate position if to move -a in x-direction.
-					testx = x[i] - a;
-					testy = y[i];
+					testx = x[n] - a;
+					testy = y[n];
 				}
 				else if(rnd < (pnxe + ppxe)){
 					//Generate position if to move +a in x-direction.
-					testx = x[i] + a;
-					testy = y[i];
+					testx = x[n] + a;
+					testy = y[n];
 				}
 				else if(rnd < (pnxe + ppxe + pnye)){
 					//Generate position if to move -a in y-direction.
-					testy = y[i] - a;
-					testx = x[i];
+					testy = y[n] - a;
+					testx = x[n];
 				}
 				else if(rnd < (pnxe + ppxe + pnye + ppye)){
 					//Generate position if to move +a in y-direction.
-					testy = y[i] + a;
-					testx = x[i];
+					testy = y[n] + a;
+					testx = x[n];
 				}
 				else{
 					//Generate position if to stay in current position.
-					testx = x[i];
-					testy = y[i];
+					testx = x[n];
+					testy = y[n];
+					k = 0;
 				}
 			}
-			if(testx != x[i] && testy != y[i]){
+			printf("testx: %f, testy: %f\n", testx, testy);
+			printf("x[n]: %f, y[n]: %f\n\n",x[n], y[n]);
+
+			//Need XOR logical operation.
+			if(!(testx != x[n]) != !(testy != y[n])){
 				/*
 				Determine motion of the particle depending on test position.
 				If particle is not set to move, nothing is done.
 				*/
+				printf("Hello\n");
 				if(testx >= 0 && testx < xL && testy >= 0 && testy < yL){
 					/*
 					If particle is within absolute array limits...
@@ -259,8 +280,8 @@ int main(){
 						Particle has not moved to different cell region. Simply
 						set particle position to proposed position.
 						*/
-						x[i] = testx;
-						y[i] = testy;
+						x[n] = testx;
+						y[n] = testy;
 					}
 					else if(state == 1 && teststate == 0){
 						/*
@@ -272,8 +293,8 @@ int main(){
 						rnd = (double)rand()/(double)RAND_MAX;
 						if(rnd < pie){
 							//Particle will cross boundary into extracellular region.
-							x[i] = testx;
-							y[i] = testy;
+							x[n] = testx;
+							y[n] = testy;
 						}
 					}
 					else{
@@ -285,22 +306,25 @@ int main(){
 						rnd = (double)rand()/(double)RAND_MAX;
 						if(rnd < pei){
 							//Particle will cross boundary in intracellular region.
-							x[i] = testx;
-							y[i] = testy;
+							x[n] = testx;
+							y[n] = testy;
 						}					
 					}
 				}
 			}
 			//No need to touch anything below this line.
-			sum_x += x[i];
-			sum_x2 += x[i]*x[i];
+			sum_x += x[n];
+			sum_x2 += x[n]*x[n];
 
 			/*Convert particle position to integer and increment particle count 
 			at that	position rho[sxi] by 1 unit.*/
-			sxi = (int)(x[i]);
-			syi = (int)(y[i]);
+			sxi = (int)(x[n]);
+			syi = (int)(y[n]);
 			rho[syi][sxi]++;
-			printf("Hello %d",i)
+
+
+			//sxi and syi do not change for every time step.
+			//printf("sxi: %d syi: %d for the %d particle\n", sxi, syi, n);
 		}
 		
 		//Writing density distribution data to file.
@@ -313,8 +337,8 @@ int main(){
 		a row of data.
 		*/
 		for (j = 0; j < yL; j++){
-			for(k = 0; k < xL; k++){
-				fprintf(outdists, "%d ", rho[j][k]);
+			for(i = 0; i < xL; i++){
+				fprintf(outdists, "%d ", rho[j][i]);
 			}
 			fprintf(outdists, "\n");
 		}
