@@ -225,8 +225,8 @@ int main(){
 					k = 0;
 				}
 			}
-			printf("testx: %f, testy: %f\n", testx, testy);
-			printf("x[n]: %f, y[n]: %f\n\n",x[n], y[n]);
+			//printf("testx: %f, testy: %f\n", testx, testy);
+			//printf("x[n]: %f, y[n]: %f\n\n",x[n], y[n]);
 
 			//Need XOR logical operation.
 			if(!(testx != x[n]) != !(testy != y[n])){
@@ -234,7 +234,7 @@ int main(){
 				Determine motion of the particle depending on test position.
 				If particle is not set to move, nothing is done.
 				*/
-				printf("Hello\n");
+				//printf("Hello\n");
 				if(testx >= 0 && testx < xL && testy >= 0 && testy < yL){
 					/*
 					If particle is within absolute array limits...
