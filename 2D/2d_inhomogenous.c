@@ -5,6 +5,11 @@ Representation of lattice inhomogeneity.
 101010
 000000
 
+NOTE: Due to the way determination of particle states is handled, usage of
+more than one unit cell in column (mU > 1) may produce unexpected results. This
+issue is derived from the fact that in the y-direction, there are two kinds of
+unit cells. The current handling of the problem was intended only as a quick
+solution to get the program running producing data for modeling.
 */
 
 #include "stdio.h"
@@ -24,7 +29,7 @@ Representation of lattice inhomogeneity.
 
 int main(){
 	//Index variables; for-loops and time-step limit.
-	int i, j, n, k;
+	int i, j, n;
 	int t, tmax = 10000;
 
 	//Unit cell dimensions.
@@ -91,8 +96,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t001.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t001_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/3_xunit_500k_000.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/3_xunit_500k_000_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -120,7 +125,12 @@ int main(){
 			modx = x[n] - ucopx*xU;
 			mody = y[n] - ucopy*yU;
 
-			//Usage of yC here does not reflect its meaning. Need to fix this.
+			/*
+			Usage of yC here does not reflect its meaning. Need to fix this.
+			This is an issue if using more than one 'unit' cell in y-dir.
+			I think the issue stems from having two different kinds of unit
+			cells in the y-dir.
+			*/
 			if(mody < yC){
 				/*
 				Particle is in top half of 2D array and may be in either an
@@ -206,7 +216,6 @@ int main(){
 					//Generate position if to stay in current position.
 					testx = x[n];
 					testy = y[n];
-					k = 0;
 				}
 			}
 
