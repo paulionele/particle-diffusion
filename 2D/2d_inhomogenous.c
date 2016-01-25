@@ -17,12 +17,12 @@ solution to get the program running producing data for modeling.
 #include "math.h"
 
 // Parameters for characterization of entire 2D inhomogeneous lattice.
-#define N 500000	//number of particles
+#define N 1000000	//number of particles
 #define xC 11		//x length of cellular space
 #define yC 11		//y length of cellular space
 #define xE 11		//x length of extracellular space
 #define yE 11		//y length of extracellular space
-#define nU 3		//number of unit cells in row
+#define nU 17		//number of unit cells in row
 #define mU 1        //number of unit cells in column
 #define mR 2		//number of rows (NOT USED)
 #define nR 0        //number of columns (NOT USED)
@@ -30,7 +30,7 @@ solution to get the program running producing data for modeling.
 int main(){
 	//Index variables; for-loops and time-step limit.
 	int i, j, n;
-	int t, tmax = 10000;
+	int t, tmax = 14000;
 
 	//Unit cell dimensions.
 	int xU = xC + xE;
@@ -90,14 +90,14 @@ int main(){
 
 	//Random variable and variables for MSD calculations.
 	double rnd;
-	double sum_x, sum_x2, avg_x, avg_x2;
+	double resultant_x, resultant_y, resultant_x_sq, resultant_y_sq, sum_resultant, msd;
 
 	//File naming and preparation. Why do we get a segmentation fault below?
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/3_xunit_500k_000.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/3_xunit_500k_000_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/msd_test_17_xunit_500k.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/msd_test_17_xunit_500k_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -105,8 +105,7 @@ int main(){
 	//--------------------------------------------------------------------------
 	//Below is where the main work is done.
 	for (t = 0; t < tmax; t++){
-		sum_x = 0;
-		sum_x2 = 0;
+		sum_resultant = 0;
 
 		//Set density array elements to zero.
 		for (j = 0; j < yL; j++){
@@ -302,9 +301,13 @@ int main(){
 					}
 				}
 			}
-			//No need to touch anything below this line.
-			sum_x += x[n];
-			sum_x2 += x[n]*x[n];
+			//MSD calculations and file output below this line.-----------------
+			resultant_x = x[n] - xSP;
+			resultant_y = y[n] - ySP;
+			resultant_x_sq = resultant_x*resultant_x;
+			resultant_y_sq = resultant_y*resultant_y;
+
+			sum_resultant += resultant_x_sq + resultant_y_sq;
 
 			/*Convert particle position to integer and increment particle count 
 			at that	position rho[sxi] by 1 unit.*/
@@ -327,9 +330,9 @@ int main(){
 		fprintf(outdists, "\n");
 
 		//Writing mean-square-displacement data to file.
-		//avg_x = sum_x/(double)N;
-		//avg_x2 = sum_x2/(double)N;
-		//fprintf(outstats, "%f %f %f\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
+		//Done after looping over all particles; done once per time step.
+		msd = sum_resultant/(double)N;
+		fprintf(outstats, "%f\n", msd);
 	}
 	//return 0;
 }
