@@ -17,12 +17,12 @@ solution to get the program running producing data for modeling.
 #include "math.h"
 
 // Parameters for characterization of entire 2D inhomogeneous lattice.
-#define N 1000000	//number of particles
+#define N 500000	//number of particles
 #define xC 11		//x length of cellular space
 #define yC 11		//y length of cellular space
 #define xE 11		//x length of extracellular space
 #define yE 11		//y length of extracellular space
-#define nU 17		//number of unit cells in row
+#define nU 3		//number of unit cells in row
 #define mU 1        //number of unit cells in column
 #define mR 2		//number of rows (NOT USED)
 #define nR 0        //number of columns (NOT USED)
@@ -30,7 +30,7 @@ solution to get the program running producing data for modeling.
 int main(){
 	//Index variables; for-loops and time-step limit.
 	int i, j, n;
-	int t, tmax = 14000;
+	int t, tmax = 10000;
 
 	//Unit cell dimensions.
 	int xU = xC + xE;
@@ -75,29 +75,31 @@ int main(){
 
 	//Stepsize.
 	double a = 1.0;
+	//Probabilities for x or y motion.
+	double px = 0.5, py = 0.5;
 	//Stepping probabilities (arb. chosen) for intracellular.
 	//Physical model: intracellular regions less diffusive (more viscous).
-	double pnxi = 0.1, ppxi = 0.1, pxsi = 1.0-pnxi-ppxi;
-	double pnyi = 0.1, ppyi = 0.1, pysi = 1.0-pnyi-ppyi;
+	double pnxi = 0.2, ppxi = 0.2;
+	double pnyi = 0.2, ppyi = 0.2;
 	//Stepping probabilities (arb. chosen) for extracellular.
 	//Physical model: extracellular regions more diffusive (less viscous).
-	double pnxe = 0.2, ppxe = 0.2, pxse = 1.0-pnxe-ppxe;
-	double pnye = 0.2, ppye = 0.2, pyse = 1.0-pnye-ppye;
+	double pnxe = 0.4, ppxe = 0.4;
+	double pnye = 0.4, ppye = 0.4;
 	//Coupled probabilities crossing from intra to extra (pie) or extra to intra (pei).
 	//Although pie (or pei) arbitrarily chosen, these values are related. 
 	double pie = 0.025;
 	double pei = (pnxi/pnxe)*pie; 
 
 	//Random variable and variables for MSD calculations.
-	double rnd1;
+	double rnd1, rnd2;
 	double resultant_x, resultant_y, resultant_x_sq, resultant_y_sq, sum_resultant, msd;
 
 	//File naming and preparation. Why do we get a segmentation fault below?
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/msd_test_17_xunit_500k.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/msd_test_17_xunit_500k_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/npr_test_3_xunit_500k.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/npr_test_3_xunit_500k_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -157,31 +159,44 @@ int main(){
 				Test membership of random number to 4 intervals.
 				Each interval represents a different particle direction.
 				*/
-				rnd1 = (double)rand()/(double)RAND_MAX;
-				if (rnd1 < pnxi){
-					//Generate position if to move -a in x-direction.
-					testx = x[n] - a;
-					testy = y[n];				
-				}
-				else if(rnd1 < (pnxi + ppxi)){
-					//Generate position if to move +a in x-direction.
-					testx = x[n] + a;
+				rnd1 = (double)rand()/(double)RAND_MAX; //used for x or y direction
+				rnd2 = (double)rand()/(double)RAND_MAX; //used for + or - in x or y
+
+				//Resolve direction of motion.
+				if(rnd1 < px){
+					//Motion is in x direction. Position in y-direction fixed.
 					testy = y[n];
-				}
-				else if(rnd1 < (pnxi + ppxi + pnyi)){
-					//Generate position if to move -a in y-direction.
-					testy = y[n] - a;
-					testx = x[n];
-				}
-				else if(rnd1 < (pnxi + ppxi + pnyi + ppyi)){
-					//Generate position if to move +a in y-direction.
-					testy = y[n] + a;
-					testx = x[n];
+
+					if(rnd2 < pnxi){
+						//Generate position if to move -a in x-direction.
+						testx = x[n] - a;
+					}
+					else if(rnd2 < pnxi + ppxi){
+						//Generate position if to move +a in x-direction.
+						testx = x[n] + a;
+					}
+					else{
+						//Generate position if to stay in current position.
+						testx = x[n];
+					}
 				}
 				else{
-					//Generate position if to stay in current position.
+					//Motion is in y direction. Position in x-direction fixed.
 					testx = x[n];
-					testy = y[n];
+
+					if(rnd2 < pnyi){
+						//Generate position if to move -a in y-direction.
+						testy = y[n] - a;
+					}
+					else if(rnd2 < pnyi + ppyi){
+						//Generate position if to move +a in y-direction.
+						testy = y[n] + a;
+					}
+					else{
+						//Generate position if to stay in current position.
+						testy = y[n];
+					}
+
 				}
 			}
 			else{
@@ -190,31 +205,44 @@ int main(){
 				Test membership of random number to 4 intervals.
 				Each interval represents a different particle direction.
 				*/
-				rnd1 = (double)rand()/(double)RAND_MAX;
-				if (rnd1 < pnxe){
-					//Generate position if to move -a in x-direction.
-					testx = x[n] - a;
+				rnd1 = (double)rand()/(double)RAND_MAX; //used for x or y direction
+				rnd2 = (double)rand()/(double)RAND_MAX; //used for + or - in x or y
+
+				//Resolve direction of motion.
+				if(rnd1 < px){
+					//Motion is in x direction. Position in y-direction fixed.
 					testy = y[n];
-				}
-				else if(rnd1 < (pnxe + ppxe)){
-					//Generate position if to move +a in x-direction.
-					testx = x[n] + a;
-					testy = y[n];
-				}
-				else if(rnd1 < (pnxe + ppxe + pnye)){
-					//Generate position if to move -a in y-direction.
-					testy = y[n] - a;
-					testx = x[n];
-				}
-				else if(rnd1 < (pnxe + ppxe + pnye + ppye)){
-					//Generate position if to move +a in y-direction.
-					testy = y[n] + a;
-					testx = x[n];
+
+					if(rnd2 < pnxe){
+						//Generate position if to move -a in x-direction.
+						testx = x[n] - a;
+					}
+					else if(rnd2 < pnxe + ppxe){
+						//Generate position if to move +a in x-direction.
+						testx = x[n] + a;
+					}
+					else{
+						//Generate position if to stay in current position.
+						testx = x[n];
+					}
 				}
 				else{
-					//Generate position if to stay in current position.
+					//Motion is in y direction. Position in x-direction fixed.
 					testx = x[n];
-					testy = y[n];
+
+					if(rnd2 < pnye){
+						//Generate position if to move -a in y-direction.
+						testy = y[n] - a;
+					}
+					else if(rnd2 < pnye + ppye){
+						//Generate position if to move +a in y-direction.
+						testy = y[n] + a;
+					}
+					else{
+						//Generate position if to stay in current position.
+						testy = y[n];
+					}
+
 				}
 			}
 
