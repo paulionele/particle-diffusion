@@ -391,10 +391,10 @@ int main(){
 
 			sum_resultant += resultant_x_sq + resultant_y_sq;
 
-			sum_x += x[i];
-			sum_y += y[i];
-			sum_x2 += x[i]*x[i];
-			sum_y2 += y[i]*y[i];
+			sum_x += x[n];
+			sum_y += y[n];
+			sum_x2 += x[n]*x[n];
+			sum_y2 += y[n]*y[n];
 
 			/*Convert particle position to integer and increment particle count 
 			at that	position rho[sxi] by 1 unit.*/
