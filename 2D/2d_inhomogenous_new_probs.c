@@ -87,7 +87,7 @@ int main(){
 	double pnye = 0.4, ppye = 0.4;
 	//Coupled probabilities crossing from intra to extra (pie) or extra to intra (pei).
 	//Although pie (or pei) arbitrarily chosen, these values are related. 
-	double pie = 0.025;
+	double pie = 0.05;
 	double pei = (pnxi/pnxe)*pie; 
 
 	//Random variable and variables for MSD calculations.
@@ -159,14 +159,47 @@ int main(){
 				Test membership of random number to 4 intervals.
 				Each interval represents a different particle direction.
 				*/
-				rnd1 = (double)rand()/(double)RAND_MAX; //used for x or y direction
-				rnd2 = (double)rand()/(double)RAND_MAX; //used for + or - in x or y
+				rnd1 = (double)rand()/(double)RAND_MAX; //used for x motion.
+				rnd2 = (double)rand()/(double)RAND_MAX; //used for y motion.
 
-				//Resolve direction of motion.
+				/* 
+				Updated algorithm; particle movement in x, followed by particle
+				movement in y. Two moves per time step.
+				*/
+
+				//Motion in x.
+				if(rnd1 < pnxi){
+					//Generate position if to move -a in x-direction.
+					testx = x[n] - a;
+				}
+				else if(rnd1 < pnxi + ppxi){
+					//Generate position if to move +a in x-direction.
+					testx = x[n] + a;
+				}
+				else{
+					//Generate position if to stay in current position.
+					testx = x[n];
+				}
+
+				//Motion in y.
+				if(rnd2 < pnyi){
+					//Generate position if to move -a in y-direction.
+					testy = y[n] - a;
+				}
+				else if(rnd2 < pnyi + ppyi){
+					//Generate position if to move +a in y-direction.
+					testy = y[n] + a;
+				}
+				else{
+					//Generate position if to stay in current position.
+					testy = y[n];
+				}
+
+				/* THE FOLLOWING DOES NOT WORK AS INTENDED.
+				Check event probability (events are independent).
 				if(rnd1 < px){
 					//Motion is in x direction. Position in y-direction fixed.
 					testy = y[n];
-
 					if(rnd2 < pnxi){
 						//Generate position if to move -a in x-direction.
 						testx = x[n] - a;
@@ -183,7 +216,6 @@ int main(){
 				else{
 					//Motion is in y direction. Position in x-direction fixed.
 					testx = x[n];
-
 					if(rnd2 < pnyi){
 						//Generate position if to move -a in y-direction.
 						testy = y[n] - a;
@@ -196,8 +228,7 @@ int main(){
 						//Generate position if to stay in current position.
 						testy = y[n];
 					}
-
-				}
+				}*/
 			}
 			else{
 				/*
@@ -205,10 +236,44 @@ int main(){
 				Test membership of random number to 4 intervals.
 				Each interval represents a different particle direction.
 				*/
-				rnd1 = (double)rand()/(double)RAND_MAX; //used for x or y direction
-				rnd2 = (double)rand()/(double)RAND_MAX; //used for + or - in x or y
+				rnd1 = (double)rand()/(double)RAND_MAX; //used for x motion.
+				rnd2 = (double)rand()/(double)RAND_MAX; //used for y motion.
+				
+				/* 
+				Updated algorithm; particle movement in x, followed by particle
+				movement in y. Two moves per time step.
+				*/
 
-				//Resolve direction of motion.
+				//Motion in x.
+				if(rnd1 < pnxi){
+					//Generate position if to move -a in x-direction.
+					testx = x[n] - a;
+				}
+				else if(rnd1 < pnxi + ppxi){
+					//Generate position if to move +a in x-direction.
+					testx = x[n] + a;
+				}
+				else{
+					//Generate position if to stay in current position.
+					testx = x[n];
+				}
+				
+				//Motion in y.
+				if(rnd2 < pnyi){
+					//Generate position if to move -a in y-direction.
+					testy = y[n] - a;
+				}
+				else if(rnd2 < pnyi + ppyi){
+					//Generate position if to move +a in y-direction.
+					testy = y[n] + a;
+				}
+				else{
+					//Generate position if to stay in current position.
+					testy = y[n];
+				}
+				
+				/* THE FOLLOWING DOES NOT WORK AS INTENDED.
+				Check event probability (events are independent).
 				if(rnd1 < px){
 					//Motion is in x direction. Position in y-direction fixed.
 					testy = y[n];
@@ -242,8 +307,7 @@ int main(){
 						//Generate position if to stay in current position.
 						testy = y[n];
 					}
-
-				}
+				}*/
 			}
 
 			//Needed XOR logical operation.
