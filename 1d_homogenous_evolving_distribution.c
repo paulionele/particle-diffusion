@@ -7,7 +7,6 @@ Diffusion simulation on 1D, homogenous (lattice)? Not particle based.
 #include "stdlib.h"
 #include "math.h"
 
-#define N 5000
 #define xC 11
 #define xE 11
 #define nU 3
@@ -35,8 +34,8 @@ int main(){
 		rho_c[i] = 0;
 		rho_n[i] = 0;
 	}
-	//Setting start position of particles.
-	rho_n[xSP] = N;
+	//Setting density at start position of particles.
+	rho_n[xSP] = 100;
 
 	//Stepping probabilities (arb. chosen) for intracellular.
 	//Physical model: intracellular regions less diffusive (more viscous).
@@ -46,8 +45,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/data/t-10k_N-500k_xU-3_p-0.2.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/data/t-10k_N-500k_xU-3_p-0.2_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/data/t-3k_xU-3_p-0.1.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/data/t-3k_xU-3_p-0.1_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -79,7 +78,7 @@ int main(){
 				rho_n[i + 1] += ppxi*rho_c[i]; 
 			}
 			else{
-				//At a boundary.
+				//At a boundary. What behaviour should we have?
 				if(i == 0){
 					//Half stay in place, half move away???
 					rho_n[i] += 0.5*rho_c[i];
@@ -94,7 +93,7 @@ int main(){
 		}
 		//Writing dd data to file.
 		for (i = 0; i < xL; i++){
-			fprintf(outdists, "%d ", (int)rho_n[i]);
+			fprintf(outdists, "%f ", rho_n[i]);
 		}
 		fprintf(outdists, "\n");
 	}
