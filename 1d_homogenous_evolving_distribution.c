@@ -7,6 +7,7 @@ Diffusion simulation on 1D, homogenous (lattice)? Not particle based.
 #include "stdlib.h"
 #include "math.h"
 
+#define N 100
 #define xC 11
 #define xE 11
 #define nU 3
@@ -35,7 +36,7 @@ int main(){
 		rho_n[i] = 0;
 	}
 	//Setting density at start position of particles.
-	rho_n[xSP] = 100;
+	rho_n[xSP] = N;
 
 	//Stepping probabilities (arb. chosen) for intracellular.
 	//Physical model: intracellular regions less diffusive (more viscous).
