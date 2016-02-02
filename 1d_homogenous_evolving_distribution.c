@@ -81,14 +81,14 @@ int main(){
 			else{
 				//At a boundary. What behaviour should we have?
 				if(i == 0){
-					//Half stay in place, half move away???
-					rho_n[i] += 0.5*rho_c[i];
-					rho_n[i + 1] += 0.5*rho_c[i]; 
+					//Maintain same probabilities, no prob. to move left?
+					rho_n[i] += (1.0 - ppxi)*rho_c[i];
+					rho_n[i + 1] += ppxi*rho_c[i]; 
 				}
 				else{
-					//Half stay in place, half move away???
-					rho_n[i - 1] += 0.5*rho_c[i];
-					rho_n[i] += 0.5*rho_c[i];					
+					//Maintain smae probabilities, no prob. to move right?
+					rho_n[i - 1] += pnxi*rho_c[i];
+					rho_n[i] += (1.0 - pnxi)*rho_c[i];					
 				}
 			}
 		}
