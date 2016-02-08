@@ -1,5 +1,5 @@
 /* 
-Partcle-based diffusion simulation on 2D, inhomogeneous lattice. 
+Particle-based diffusion simulation on 2D, inhomogeneous lattice. 
 
 Representation of lattice inhomogeneity.
 101010
@@ -77,12 +77,12 @@ int main(){
 	double a = 1.0;
 	//Stepping probabilities (arb. chosen) for intracellular.
 	//Physical model: intracellular regions less diffusive (more viscous).
-	double pnxi = 0.1, ppxi = 0.1;
-	double pnyi = 0.1, ppyi = 0.1;
+	double pnxi = 0.2, ppxi = 0.2;
+	double pnyi = 0.2, ppyi = 0.2;
 	//Stepping probabilities (arb. chosen) for extracellular.
 	//Physical model: extracellular regions more diffusive (less viscous).
-	double pnxe = 0.2, ppxe = 0.2;
-	double pnye = 0.2, ppye = 0.2;
+	double pnxe = 0.4, ppxe = 0.4;
+	double pnye = 0.4, ppye = 0.4;
 	//Coupled probabilities crossing from intra to extra (pie) or extra to intra (pei).
 	//Although pie (or pei) arbitrarily chosen, these values are related. 
 	double pie = 0.025;
@@ -98,8 +98,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/NTEST_t-10k_N-500k_xU-3_pi-0.1_pe-0.2_pie-0.025.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/NTEST_t-10k_N-500k_xU-3_pi-0.1_pe-0.2_pie-0.025_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/NTEST_t-3_N-3_xU-3_pi-0.1_pe-0.2_pie-0.025.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/NTEST_t-3_N-3_xU-3_pi-0.1_pe-0.2_pie-0.025_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -181,7 +181,6 @@ int main(){
 					//Generate position if to stay in current position.
 					testx = x[n];
 				}
-
 				//Movement in y.
 				if(rnd2 < pnyi){
 					//Generate position if to move -a in y-direction.
@@ -195,34 +194,6 @@ int main(){
 					//Generate position if to stay in current position.
 					testy = y[n];
 				}
-				
-				/*//OLD PARTICLE MOVEMENT ALGORITHM
-				rnd1 = (double)rand()/(double)RAND_MAX;
-				if (rnd1 < pnxi){
-					//Generate position if to move -a in x-direction.
-					testx = x[n] - a;
-					testy = y[n];				
-				}
-				else if(rnd1 < (pnxi + ppxi)){
-					//Generate position if to move +a in x-direction.
-					testx = x[n] + a;
-					testy = y[n];
-				}
-				else if(rnd1 < (pnxi + ppxi + pnyi)){
-					//Generate position if to move -a in y-direction.
-					testy = y[n] - a;
-					testx = x[n];
-				}
-				else if(rnd1 < (pnxi + ppxi + pnyi + ppyi)){
-					//Generate position if to move +a in y-direction.
-					testy = y[n] + a;
-					testx = x[n];
-				}
-				else{
-					//Generate position if to stay in current position.
-					testx = x[n];
-					testy = y[n];
-				}*/
 			}
 			else{
 				/*
@@ -236,7 +207,6 @@ int main(){
 				Updated algorithm; particle movement in x, followed by particle
 				movement in y. Two moves per time step.
 				*/
-
 				//Movement in x.
 				if(rnd1 < pnxe){
 					//Generate position if to move -a in x-direction.
@@ -250,7 +220,6 @@ int main(){
 					//Generate position if to stay in current position.
 					testx = x[n];
 				}
-				
 				//Movement in y.
 				if(rnd2 < pnye){
 					//Generate position if to move -a in y-direction.
@@ -264,41 +233,12 @@ int main(){
 					//Generate position if to stay in current position.
 					testy = y[n];
 				}
-
-				/*//OLD PARTICLE MOVEMENT ALGORITHM
-				rnd1 = (double)rand()/(double)RAND_MAX;
-				if (rnd1 < pnxe){
-					//Generate position if to move -a in x-direction.
-					testx = x[n] - a;
-					testy = y[n];
-				}
-				else if(rnd1 < (pnxe + ppxe)){
-					//Generate position if to move +a in x-direction.
-					testx = x[n] + a;
-					testy = y[n];
-				}
-				else if(rnd1 < (pnxe + ppxe + pnye)){
-					//Generate position if to move -a in y-direction.
-					testy = y[n] - a;
-					testx = x[n];
-				}
-				else if(rnd1 < (pnxe + ppxe + pnye + ppye)){
-					//Generate position if to move +a in y-direction.
-					testy = y[n] + a;
-					testx = x[n];
-				}
-				else{
-					//Generate position if to stay in current position.
-					testx = x[n];
-					testy = y[n];
-				}*/
 			}
-
-			//Needed XOR logical operation.
-			if(!(testx != x[n]) != !(testy != y[n])){
+			//Removed XOR logical operation: !(testx != x[n]) != !(testy != y[n])
+			if(!(testx == x[n] & testy == y[n])){
 				/*
 				Determine motion of the particle depending on test position.
-				If particle is not set to move, nothing is done.
+				If [NOT(True and True)]: if the particle has moved.
 				*/
 				if(testx >= 0 && testx < xL && testy >= 0 && testy < yL){
 					/*
@@ -377,7 +317,7 @@ int main(){
 					}
 				}
 			}
-			//MSD calculations and file output below this line.-----------------
+			//Preliminary MSD calculations below this line.-------------------
 			resultant_x = x[n] - xSP;
 			resultant_y = y[n] - ySP;
 			resultant_x_sq = resultant_x*resultant_x;
@@ -385,6 +325,7 @@ int main(){
 
 			sum_resultant += resultant_x_sq + resultant_y_sq;
 
+			//For separate MSD calculations in x and y.
 			sum_x += x[n];
 			sum_y += y[n];
 			sum_x2 += x[n]*x[n];
@@ -394,10 +335,11 @@ int main(){
 			at that	position rho[sxi] by 1 unit.*/
 			sxi = (int)(x[n]);
 			syi = (int)(y[n]);
-			rho[syi][sxi]++;
+			rho[(int)testy][(int)testx]++;
 		}
 		
 		/*
+		MSD in x, y, net, output to file.
 		Writing density distribution data to file. Each time step is written as
 		a new matrix with a space between each matrix. Each new line represents
 		a row of data.
