@@ -10,7 +10,7 @@ Diffusion simulation on 1D, homogenous (lattice)? Not particle based.
 #define N 100
 #define xC 11
 #define xE 11
-#define nU 3
+#define nU 2
 
 int main(){
 	//Index variables; for-loops and time-step limit.
@@ -72,21 +72,23 @@ int main(){
 			}
 
 			if( (i != 0) & (i != xL - 1) ){
-				//Not at boundary. Advance the density distribution.
+				//Not at an absolute boundary.
 
 				rho_n[i - 1] += pnxi*rho_c[i];
 				rho_n[i] += psxi*rho_c[i];
 				rho_n[i + 1] += ppxi*rho_c[i]; 
 			}
 			else{
-				//At a boundary. What behaviour should we have?
+				//At an absolute boundary.
 				if(i == 0){
-					//Maintain same probabilities, no prob. to move left?
+					//Zero probability to move -x (outside lattice).
+					//If particle doesn't move +x, then in stays in place.
 					rho_n[i] += (1.0 - ppxi)*rho_c[i];
 					rho_n[i + 1] += ppxi*rho_c[i]; 
 				}
 				else{
-					//Maintain smae probabilities, no prob. to move right?
+					//Zero probability to move +x (outside lattice).
+					//If particle doesn't move -x, then in stays in place.
 					rho_n[i - 1] += pnxi*rho_c[i];
 					rho_n[i] += (1.0 - pnxi)*rho_c[i];					
 				}
