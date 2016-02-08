@@ -24,7 +24,7 @@ solution to get the program running producing data for modeling.
 #define yE 11		//y length of extracellular space
 #define nU 3		//number of unit cells in row
 #define mU 1        //number of unit cells in column
-#define mR 2		//number of rows (NOT USED)
+#define mR 0		//number of rows (NOT USED)
 #define nR 0        //number of columns (NOT USED)
 
 int main(){
@@ -98,8 +98,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/NTEST_t-3_N-3_xU-3_pi-0.1_pe-0.2_pie-0.025.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/NTEST_t-3_N-3_xU-3_pi-0.1_pe-0.2_pie-0.025_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-10k_N-500k_xU-3_pi-0.2_pe-0.4_pie-0.025.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-10k_N-500k_xU-3_pi-0.2_pe-0.4_pie-0.025_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -335,7 +335,7 @@ int main(){
 			at that	position rho[sxi] by 1 unit.*/
 			sxi = (int)(x[n]);
 			syi = (int)(y[n]);
-			rho[(int)testy][(int)testx]++;
+			rho[syi][sxi]++;
 		}
 		
 		/*
