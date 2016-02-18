@@ -126,7 +126,7 @@ int main(){
 								ppxi*ppyi*rho_c[j-1][i-1] +
 								pnxi*pnyi*rho_c[j+1][i+1] +
 								ppxi*pnyi*rho_c[j+1][i-1] +
-								pnxi*ppyi*rho_c[j-1][i+1]
+								pnxi*ppyi*rho_c[j-1][i+1];
 							}
 							else if( (mody == 0) & (modx != 0) & (modx != (xC-1)) ){
 								//At the -y boundary, not at corner.
@@ -144,7 +144,7 @@ int main(){
 								ppxi*ppyi*rho_c[j-1][i-1] +
 								pei*pnxe*pnye*rho_c[j+1][i+1] +
 								pei*ppxe*pnye*rho_c[j+1][i-1] +
-								pnxi*ppyi*rho_c[j-1][i+1]
+								pnxi*ppyi*rho_c[j-1][i+1];
 							}
 							else if( (modx == 0) & (mody != 0) & (mody != (yC-1)) ){
 								//At the -x boundary, not at corner.
@@ -157,7 +157,7 @@ int main(){
 								pei*ppxe*ppye*rho_c[j-1][i-1] +
 								pnxi*pnyi*rho_c[j+1][i+1] +
 								pei*ppxe*pnye*rho_c[j+1][i-1] +
-								pnxi*ppyi*rho_c[j-1][i+1]
+								pnxi*ppyi*rho_c[j-1][i+1];
 							}
 							else if( (modx == (xC-1)) & (mody != 0) & (mody != (yC-1)) ){
 								//At the +x boundary, not at a corner.
@@ -170,7 +170,7 @@ int main(){
 								ppxi*ppyi*rho_c[j-1][i-1] +
 								pei*pnxe*pnye*rho_c[j+1][i+1] +
 								ppxi*pnyi*rho_c[j+1][i-1] +
-								pei*pnxe*ppye*rho_c[j-1][i+1]
+								pei*pnxe*ppye*rho_c[j-1][i+1];
 							}
 							else if( modx == 0 & mody == 0){
 								//At the -x,-y corner.
@@ -191,7 +191,7 @@ int main(){
 								ppxi*ppyi*rho_c[j-1][i-1] +
 								pei*pnxe*pnye*rho_c[j+1][i+1] +
 								pei*ppxe*pnye*rho_c[j+1][i-1] +
-								pei*pnxe*ppye*rho_c[j-1][i+1]
+								pei*pnxe*ppye*rho_c[j-1][i+1];
 							}
 							else if( modx == 0 & mody == (yC-1) ){
 								//At the -x,+y corner.
@@ -204,7 +204,7 @@ int main(){
 								pei*ppxe*ppye*rho_c[j-1][i-1] +
 								pei*pnxe*pnye*rho_c[j+1][i+1] +
 								pei*ppxe*pnye*rho_c[j+1][i-1] +
-								pnxi*ppyi*rho_c[j-1][i+1]
+								pnxi*ppyi*rho_c[j-1][i+1];
 							}
 							else{
 								printf("Lattice site location error in cellular region.\n")
@@ -225,7 +225,7 @@ int main(){
 								ppxe*ppye*rho_c[j-1][i-1] +
 								pnxe*pnye*rho_c[j+1][i+1] +
 								ppxe*pnye*rho_c[j+1][i-1] +
-								pnxe*ppye*rho_c[j-1][i+1]
+								pnxe*ppye*rho_c[j-1][i+1];
 							}
 							else if( (mody == 0) & (modx != (xC)) & (modx != (xU-1)) ){
 								//At the -y boundary, not at corner.
@@ -244,7 +244,7 @@ int main(){
 								ppxe*ppye*rho_c[j-1][i-1] +
 								pnxi*pnyi*rho_c[j+1][i+1] +
 								ppxi*pnyi*rho_c[j+1][i-1] +
-								pnxe*ppye*rho_c[j-1][i+1]
+								pnxe*ppye*rho_c[j-1][i+1];
 							}
 							else if( (modx == xC) & (mody != 0) & (mody != (yC-1)) ){
 								//At the -x boundary, not at corner.
@@ -257,7 +257,7 @@ int main(){
 								pie*ppxi*ppyi*rho_c[j-1][i-1] +
 								pnxe*pnye*rho_c[j+1][i+1] +
 								pie*ppxi*pnyi*rho_c[j+1][i-1] +
-								pnxe*ppye*rho_c[j-1][i+1
+								pnxe*ppye*rho_c[j-1][i+1];
 							}
 							else if( (modx == (xU-1)) & (mody != 0) & (mody != (yC-1)) ){
 								//At the +x boundary, not at a corner.
@@ -270,7 +270,7 @@ int main(){
 								ppxe*ppye*rho_c[j-1][i-1] +
 								pie*pnxi*pnyi*rho_c[j+1][i+1] +
 								ppxe*pnye*rho_c[j+1][i-1] +
-								pie*pnxi*ppyi*rho_c[j-1][i+1]
+								pie*pnxi*ppyi*rho_c[j-1][i+1];
 							}
 							else if( modx == xC & mody == 0){
 								//At the -x,-y corner.
@@ -291,7 +291,7 @@ int main(){
 								ppxe*ppye*rho_c[j-1][i-1] +
 								pie*pnxi*pnyi*rho_c[j+1][i+1] +
 								pie*ppxi*pnyi*rho_c[j+1][i-1] +
-								pie*pnxi*ppyi*rho_c[j-1][i+1]
+								pie*pnxi*ppyi*rho_c[j-1][i+1];
 							}
 							else if( modx == xC & mody == (yC-1) ){
 								//At the -x,+y corner.
@@ -304,7 +304,10 @@ int main(){
 								pie*ppxi*ppyi*rho_c[j-1][i-1] +
 								pie*pnxi*pnyi*rho_c[j+1][i+1] +
 								pie*ppxi*pnyi*rho_c[j+1][i-1] +
-								pnxe*ppye*rho_c[j-1][i+1]
+								pnxe*ppye*rho_c[j-1][i+1];
+							}
+							else{
+								printf("Lattice site location error in upper EC region.");
 							}
 						}
 					}
