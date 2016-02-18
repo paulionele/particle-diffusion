@@ -113,6 +113,7 @@ int main(){
 						*/
 						if( modx < xC ){
 							//Lattice site is in cellular region.
+							//Testing for 3 different boundaries and 2 corner sites.
 							if( ((modx != 0) & (modx != (xC-1))) & ((mody != 0) & (mody != (yC-1))) ){
 								//Lattice site is not at cellular boundaries.
 								rho_n[j][i] = 
@@ -123,95 +124,94 @@ int main(){
 								psxi*pnyi*rho_c[j+1][i] +
 								ppxi*ppyi*rho_c[j-1][i-1] +
 								pnxi*pnyi*rho_c[j+1][i+1] +
-								ppxi*pnyi*rho_c[j+1][x-1] +
-								pnxi*ppyi*rho_c[j-1][x+1]
+								ppxi*pnyi*rho_c[j+1][i-1] +
+								pnxi*ppyi*rho_c[j-1][i+1]
 							}
 							else if( mody == 0 & modx != 0 & modx != (xC-1) ){
 								//At the -y boundary, not at corner.
-								//Will this case ever happen?
-								printf("Error, should not happen with current setup.\n");
+								//This case should not execute here, since only 1 unit cell in y.
+								printf("Error, -y boundary.\n");
 							}
 							else if( mody == (yC-1) & modx != 0 & modx != (xC-1) ){
 								//At the +y boundary, not at corner.
 								rho_n[j][i] = 
-								(1.0-ppxi*psyi-pnxi*psyi-psxi*ppyi-psxe*pnye*pei-ppxi*ppyi-pnxe*pnye*pei-ppxe*pnye*pei-pnxi*ppyi)*rho_c[j][i] + 
+								(1.0-ppxi*psyi-pnxi*psyi-psxi*ppyi-pei*psxe*pnye-ppxi*ppyi-pei*pnxe*pnye-pei*ppxe*pnye-pnxi*ppyi)*rho_c[j][i] + 
 								ppxi*psyi*rho_c[j][i-1] +
 								pnxi*psyi*rho_c[j][i+1] +
 								psxi*ppyi*rho_c[j-1][i] +
-								psxe*pnye*pei*rho_c[j+1][i] +
+								pei*psxe*pnye*rho_c[j+1][i] +
 								ppxi*ppyi*rho_c[j-1][i-1] +
-								pnxe*pnye*pei*rho_c[j+1][i+1] +
-								ppxe*pnye*pei*rho_c[j+1][x-1] +
-								pnxi*ppyi*rho_c[j-1][x+1]
+								pei*pnxe*pnye*rho_c[j+1][i+1] +
+								pei*ppxe*pnye*rho_c[j+1][i-1] +
+								pnxi*ppyi*rho_c[j-1][i+1]
 							}
 							else if( modx == 0 & mody != 0 & mody != (yC-1) ){
 								//At the -x boundary, not at corner.
 								rho_n[j][i] = 
-								(1.0-ppxe*pei*psxe-pnxi*psxi-psxi*ppyi-psxi*pnyi-ppxe*pei*ppye-pnxi*pnyi-ppxe*pei*pnxe-pnxi*ppyi)*rho_c[j][i] + 
-								ppxe*pei*psxe*rho_c[j][i-1] +
-								pnxi*psxi*rho_c[j][i+1] +
+								(1.0-pei*ppxe*psye-pnxi*psyi-psxi*ppyi-psxi*pnyi-pei*ppxe*ppye-pnxi*pnyi-pei*ppxe*pnye-pnxi*ppyi)*rho_c[j][i] + 
+								pei*ppxe*psye*rho_c[j][i-1] +
+								pnxi*psyi*rho_c[j][i+1] +
 								psxi*ppyi*rho_c[j-1][i] +
-								psxi*pnyi*rpnxi*ppyiho_c[j+1][i] +
-								ppxe*pei*ppye*rho_c[j-1][i-1] +
+								psxi*pnyi*rho_c[j+1][i] +
+								pei*ppxe*ppye*rho_c[j-1][i-1] +
 								pnxi*pnyi*rho_c[j+1][i+1] +
-								ppxe*pei*pnxe*rho_c[j+1][x-1] +
-								pnxi*ppyi*rho_c[j-1][x+1]
+								pei*ppxe*pnye*rho_c[j+1][i-1] +
+								pnxi*ppyi*rho_c[j-1][i+1]
 							}
 							else if( modx == (xC-1) & mody != 0 & mody != (yC-1) ){
 								//At the +x boundary, not at a corner.
 								rho_n[j][i] = 
-								(1.0-ppxi*psyi-pnxe*pei*psye-psxi*ppyi-psxi*pnyi-ppxi*ppyi-pnxe*pei*pnye-ppxi*pnyi-pnxe*pei*ppye)*rho_c[j][i] + 
+								(1.0-ppxi*psyi-pei*pnxe*psye-psxi*ppyi-psxi*pnyi-ppxi*ppyi-pei*pnxe*pnye-ppxi*pnyi-pei*pnxe*ppye)*rho_c[j][i] + 
 								ppxi*psyi*rho_c[j][i-1] +
-								pnxe*pei*psye*rho_c[j][i+1] +
+								pei*pnxe*psye*rho_c[j][i+1] +
 								psxi*ppyi*rho_c[j-1][i] +
 								psxi*pnyi*rho_c[j+1][i] +
 								ppxi*ppyi*rho_c[j-1][i-1] +
-								pnxe*pei*pnye*rho_c[j+1][i+1] +
-								ppxi*pnyi*rho_c[j+1][x-1] +
-								pnxe*pei*ppye*rho_c[j-1][x+1]
+								pei*pnxe*pnye*rho_c[j+1][i+1] +
+								ppxi*pnyi*rho_c[j+1][i-1] +
+								pei*pnxe*ppye*rho_c[j-1][i+1]
 							}
 							else if( modx == 0 & mody == 0){
 								//At the -x,-y corner.
-								//Will this case ever happen?
-								printf("Error, should not happen.\n");
+								printf("Error, -x,-y corner.\n");
 							}
 							else if( modx == (xC-1) & mody == 0){
 								//At the +x,-y corner.
-								//Will this case ever happen?
-								printf("Error, should not happen.\n");
+								printf("Error, +x,-y corner.\n");
 							}
 							else if( modx == (xC-1) & mody == (yC-1) ){
 								//At the +x,+y corner.
 								rho_n[j][i] = 
-								(1.0-)*rho_c[j][i] + 
-								*rho_c[j][i-1] +
-								*rho_c[j][i+1] +
-								*rho_c[j-1][i] +
-								*rho_c[j+1][i] +
-								*rho_c[j-1][i-1] +
-								*rho_c[j+1][i+1] +
-								*rho_c[j+1][x-1] +
-								*rho_c[j-1][x+1]
+								(1.0-ppxi*psyi-pei*pnxe*psye-psxi*ppyi-pei*psxe*pnye-ppxi*ppyi-pei*pnxe*pnye-pei*ppxe*pnye-pei*pnxe*ppye)*rho_c[j][i] + 
+								ppxi*psyi*rho_c[j][i-1] +
+								pei*pnxe*psye*rho_c[j][i+1] +
+								psxi*ppyi*rho_c[j-1][i] +
+								pei*psxe*pnye*rho_c[j+1][i] +
+								ppxi*ppyi*rho_c[j-1][i-1] +
+								pei*pnxe*pnye*rho_c[j+1][i+1] +
+								pei*ppxe*pnye*rho_c[j+1][i-1] +
+								pei*pnxe*ppye*rho_c[j-1][i+1]
 							}
 							else if( modx == 0 & mody == (yC-1) ){
 								//At the -x,+y corner.
 								rho_n[j][i] = 
-								(1.0-)*rho_c[j][i] + 
-								*rho_c[j][i-1] +
-								*rho_c[j][i+1] +
-								*rho_c[j-1][i] +
-								*rho_c[j+1][i] +
-								*rho_c[j-1][i-1] +
-								*rho_c[j+1][i+1] +
-								*rho_c[j+1][x-1] +
-								*rho_c[j-1][x+1]
+								(1.0-pei*ppxe*psye-pnxi*psyi-psxi*ppyi-pei*psxe*pnye-pei*ppxe*ppye-pei*pnxe*pnye-pei*ppxe*pnye-pnxi*ppyi)*rho_c[j][i] + 
+								pei*ppxe*psye*rho_c[j][i-1] +
+								pnxi*psyi*rho_c[j][i+1] +
+								psxi*ppyi*rho_c[j-1][i] +
+								pei*psxe*pnye*rho_c[j+1][i] +
+								pei*ppxe*ppye*rho_c[j-1][i-1] +
+								pei*pnxe*pnye*rho_c[j+1][i+1] +
+								pei*ppxe*pnye*rho_c[j+1][i-1] +
+								pnxi*ppyi*rho_c[j-1][i+1]
 							}
 							else{
-								printf("Error in cellular region.\n")
+								printf("Lattice site location error in cellular region.\n")
 							}
 						}
 						else{
 							//Lattice site is in upper half extracellular region.
+							//Testing for 2 different boundaries and 2 corner sites.
 
 							
 						}
