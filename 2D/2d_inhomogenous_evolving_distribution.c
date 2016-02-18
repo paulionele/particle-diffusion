@@ -214,7 +214,98 @@ int main(){
 						else{
 							//Lattice site is in upper half extracellular region.
 							//Testing for 2 different boundaries and 2 corner sites.
-
+							if( ((modx != xC) & (modx != (xU-1)) & ((mody != 0) & (mody != (yC-1))) ){
+								//Lattice site is not at extracellular boundaries.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pnxe*psye-psxe*ppye-psxe*pnye-ppxe*ppye-pnxe*pnye-ppxe*pnye-pnxe*ppye)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								ppxe*ppye*rho_c[j-1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
+								pnxe*ppye*rho_c[j-1][i+1]
+							}
+							else if( (mody == 0) & (modx != (xC)) & (modx != (xU-1)) ){
+								//At the -y boundary, not at corner.
+								//This case should not execute here, since only 1 unit cell in y.
+								printf("Error, -y boundary.\n");
+							}
+							else if( (mody == (yC-1)) & (modx != (xC)) & (modx != (xU-1)) ){
+								//At the +y boundary, not at corner. Not really a boundary.
+								//Can probably remove this completely in the future.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pnxe*psye-psxe*ppye-psxi*pnyi-ppxe*ppye-pnxi*pnyi-ppxi*pnyi-pnxe*ppye)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								psxi*pnyi*rho_c[j+1][i] +
+								ppxe*ppye*rho_c[j-1][i-1] +
+								pnxi*pnyi*rho_c[j+1][i+1] +
+								ppxi*pnyi*rho_c[j+1][i-1] +
+								pnxe*ppye*rho_c[j-1][i+1]
+							}
+							else if( (modx == xC) & (mody != 0) & (mody != (yC-1)) ){
+								//At the -x boundary, not at corner.
+								rho_n[j][i] = 
+								(1.0-pie*ppxi*psyi-pnxe*psye-psxe*ppye-psxe*pnye-pie*ppxi*ppyi-pnxe*pnye-pie*ppxi*pnyi-pnxe*ppye)*rho_c[j][i] + 
+								pie*ppxi*psyi*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								pie*ppxi*ppyi*rho_c[j-1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								pie*ppxi*pnyi*rho_c[j+1][i-1] +
+								pnxe*ppye*rho_c[j-1][i+1
+							}
+							else if( (modx == (xU-1)) & (mody != 0) & (mody != (yC-1)) ){
+								//At the +x boundary, not at a corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pie*pnxi*psyi-psxe*ppye-psxe*pnye-ppxe*ppye-pie*pnxi*pnyi-ppxe*pnye-pie*pnxi*ppyi)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pie*pnxi*psyi*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								ppxe*ppye*rho_c[j-1][i-1] +
+								pie*pnxi*pnyi*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
+								pie*pnxi*ppyi*rho_c[j-1][i+1]
+							}
+							else if( modx == xC & mody == 0){
+								//At the -x,-y corner.
+								printf("Error, -x,-y corner.\n");
+							}
+							else if( modx == (xU-1) & mody == 0){
+								//At the +x,-y corner.
+								printf("Error, +x,-y corner.\n");
+							}
+							else if( modx == (xU-1) & mody == (yC-1) ){
+								//At the +x,+y corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pie*pnxi*psyi-psxe*ppye-pie*psxi*pnyi-ppxe*ppye-pie*pnxi*pnyi-pie*ppxi*pnyi-pie*pnxi*ppyi)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pie*pnxi*psyi*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								pie*psxi*pnyi*rho_c[j+1][i] +
+								ppxe*ppye*rho_c[j-1][i-1] +
+								pie*pnxi*pnyi*rho_c[j+1][i+1] +
+								pie*ppxi*pnyi*rho_c[j+1][i-1] +
+								pie*pnxi*ppyi*rho_c[j-1][i+1]
+							}
+							else if( modx == xC & mody == (yC-1) ){
+								//At the -x,+y corner.
+								rho_n[j][i] = 
+								(1.0-pie*ppxi*psyi-pnxe*psye-psxe*ppye-pie*psxi*pnyi-pie*ppxi*ppyi-pie*pnxi*pnyi-pie*ppxi*pnyi-pnxe*ppye)*rho_c[j][i] + 
+								pie*ppxi*psyi*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								pie*psxi*pnyi*rho_c[j+1][i] +
+								pie*ppxi*ppyi*rho_c[j-1][i-1] +
+								pie*pnxi*pnyi*rho_c[j+1][i+1] +
+								pie*ppxi*pnyi*rho_c[j+1][i-1] +
+								pnxe*ppye*rho_c[j-1][i+1]
+							}
 						}
 					}
 					else{
