@@ -111,6 +111,7 @@ int main(){
 						Lattice site is in top half of 2D array and may be in either an
 						intracelllar or extracellular region.
 						*/
+//-------------
 						if( modx < xC ){
 							//Lattice site is in cellular region.
 							//Testing for 3 different boundaries and 2 corner sites.
@@ -127,12 +128,12 @@ int main(){
 								ppxi*pnyi*rho_c[j+1][i-1] +
 								pnxi*ppyi*rho_c[j-1][i+1]
 							}
-							else if( mody == 0 & modx != 0 & modx != (xC-1) ){
+							else if( (mody == 0) & (modx != 0) & (modx != (xC-1)) ){
 								//At the -y boundary, not at corner.
 								//This case should not execute here, since only 1 unit cell in y.
 								printf("Error, -y boundary.\n");
 							}
-							else if( mody == (yC-1) & modx != 0 & modx != (xC-1) ){
+							else if( (mody == (yC-1) & (modx != 0) & (modx != (xC-1)) ){
 								//At the +y boundary, not at corner.
 								rho_n[j][i] = 
 								(1.0-ppxi*psyi-pnxi*psyi-psxi*ppyi-pei*psxe*pnye-ppxi*ppyi-pei*pnxe*pnye-pei*ppxe*pnye-pnxi*ppyi)*rho_c[j][i] + 
@@ -145,7 +146,7 @@ int main(){
 								pei*ppxe*pnye*rho_c[j+1][i-1] +
 								pnxi*ppyi*rho_c[j-1][i+1]
 							}
-							else if( modx == 0 & mody != 0 & mody != (yC-1) ){
+							else if( (modx == 0) & (mody != 0) & (mody != (yC-1)) ){
 								//At the -x boundary, not at corner.
 								rho_n[j][i] = 
 								(1.0-pei*ppxe*psye-pnxi*psyi-psxi*ppyi-psxi*pnyi-pei*ppxe*ppye-pnxi*pnyi-pei*ppxe*pnye-pnxi*ppyi)*rho_c[j][i] + 
@@ -158,7 +159,7 @@ int main(){
 								pei*ppxe*pnye*rho_c[j+1][i-1] +
 								pnxi*ppyi*rho_c[j-1][i+1]
 							}
-							else if( modx == (xC-1) & mody != 0 & mody != (yC-1) ){
+							else if( (modx == (xC-1)) & (mody != 0) & (mody != (yC-1)) ){
 								//At the +x boundary, not at a corner.
 								rho_n[j][i] = 
 								(1.0-ppxi*psyi-pei*pnxe*psye-psxi*ppyi-psxi*pnyi-ppxi*ppyi-pei*pnxe*pnye-ppxi*pnyi-pei*pnxe*ppye)*rho_c[j][i] + 
@@ -209,11 +210,11 @@ int main(){
 								printf("Lattice site location error in cellular region.\n")
 							}
 						}
+//---------------
 						else{
 							//Lattice site is in upper half extracellular region.
 							//Testing for 2 different boundaries and 2 corner sites.
 
-							
 						}
 					}
 					else{
