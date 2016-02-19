@@ -423,7 +423,180 @@ int main(){
 				}
 				else{
 					//At an absolute boundary.
-
+					if( (j == 0) & (i != 0 & i != (xL - 1)) ){
+						//Upper (-y) absolute boundary, not including absolute corners.
+						if(modx < xC){
+							//Cellular region boundaries and corners.
+							if(modx != 0 & modx != (xC-1)){
+								//Along -y absolute boundary, not at corner.
+								rho_n[j][i] = 
+								(1.0-ppxi*psyi-pnxi*psyi-psxi*pnyi-pnxi*pnyi-ppxi*pnyi)*rho_c[j][i] + 
+								ppxi*psyi*rho_c[j][i-1] +
+								pnxi*psyi*rho_c[j][i+1] +
+								psxi*pnyi*rho_c[j+1][i] +
+								pnxi*pnyi*rho_c[j+1][i+1] +
+								ppxi*pnyi*rho_c[j+1][i-1];
+							}
+							else if(modx == 0){
+								//At -x,-y corner.
+								rho_n[j][i] = 
+								(1.0-pei*ppxe*psye-pnxi*psyi-psxi*pnyi-pnxi*pnyi-pei*ppxe*pnye)*rho_c[j][i] + 
+								pei*ppxe*psye*rho_c[j][i-1] +
+								pnxi*psyi*rho_c[j][i+1] +
+								psxi*pnyi*rho_c[j+1][i] +
+								pnxi*pnyi*rho_c[j+1][i+1] +
+								pei*ppxe*pnye*rho_c[j+1][i-1];
+							}
+							else{
+								//At +y,-y corner.
+								rho_n[j][i] = 
+								(1.0-ppxi*psyi-pei*pnxe*psye-psxi*pnyi-pei*pnxe*pnye-ppxi*pnyi)*rho_c[j][i] + 
+								ppxi*psyi*rho_c[j][i-1] +
+								pei*pnxe*psye*rho_c[j][i+1] +
+								psxi*pnyi*rho_c[j+1][i] +
+								pei*pnxe*pnye*rho_c[j+1][i+1] +
+								ppxi*pnyi*rho_c[j+1][i-1];
+							}
+						}
+						else{
+							//Extracellular region boundaries and corners.
+							if(modx != xC & modx != (xU-1)){
+								//Along -y absolute boundary, not at corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pnxe*psye-psxe*pnye-pnxe*pnye-ppxe*pnye)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*pnye*rho_c[j+1][i] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1];
+							}
+							else if(modx == xC){
+								//At -x,-y corner.
+								rho_n[j][i] = 
+								(1.0-pie*ppxi*psyi-pnxe*psye-psxe*pnye-pnxe*pnye-pie*ppxi*pnyi)*rho_c[j][i] + 
+								pie*ppxi*psyi*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*pnye*rho_c[j+1][i] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								pie*ppxi*pnyi*rho_c[j+1][i-1];
+							}
+							else{
+								//At +x,-y corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pie*pnxi*psyi-psxe*pnye-pie*pnxi*pnyi-ppxe*pnye)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pie*pnxi*psyi*rho_c[j][i+1] +
+								psxe*pnye*rho_c[j+1][i] +
+								pie*pnxi*pnyi*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1];
+							}
+						}
+					}
+					else if( (j == (yL-1)) & (i != 0 & i != (xL - 1)) ){
+						//Lower (+y) absolute boundary, not including absolute corners.
+						rho_n[j][i] = 
+						(1.0-ppxe*psye-pnxe*psye-psxe*ppye-ppxe*ppye-pnxe*ppye)*rho_c[j][i] + 
+						ppxe*psye*rho_c[j][i-1] +
+						pnxe*psye*rho_c[j][i+1] +
+						psxe*ppye*rho_c[j-1][i] +
+						ppxe*ppye*rho_c[j-1][i-1] +
+						pnxe*ppye*rho_c[j-1][i+1];
+					}
+					else if( (i == 0) & (j != 0 & j != (yL - 1)) ){
+						//Left (-x) absolute boundary, not including absolute corners.
+						if(mody < yC){
+							//In cellular region.
+							if(mody != (yC-1)){
+								//Along -x absolute boundary, not at corner.
+								rho_n[j][i] = 
+								(1.0-pnxi*psyi-psxi*ppyi-psxi*pnyi-pnxi*pnyi-pnxi*ppyi)*rho_c[j][i] + 
+								pnxi*psyi*rho_c[j][i+1] +
+								psxi*ppyi*rho_c[j-1][i] +
+								psxi*pnyi*rho_c[j+1][i] +
+								pnxi*pnyi*rho_c[j+1][i+1] +
+								pnxi*ppyi*rho_c[j-1][i+1];
+							}
+							else{
+								//At -x,+y corner.
+								rho_n[j][i] = 
+								(1.0-pnxi*psyi-psxi*ppyi-pei*psxe*pnye-pei*pnxe*pnye-pnxi*ppyi)*rho_c[j][i] + 
+								pnxi*psyi*rho_c[j][i+1] +
+								psxi*ppyi*rho_c[j-1][i] +
+								pei*psxe*pnye*rho_c[j+1][i] +
+								pei*pnxe*pnye*rho_c[j+1][i+1] +
+								pnxi*ppyi*rho_c[j-1][i+1];
+							}	
+						}
+						else{
+							//In extrracellular region.
+							if(mody != yC){
+								//Along -x absolute boundary, not at corner.
+								rho_n[j][i] = 
+								(1.0-pnxe*psye-psxe*ppye-psxe*pnye-pnxe*pnye-ppxe*pnye)*rho_c[j][i] + 
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1];
+							}
+							else{
+								//At -x,-y corner.
+								rho_n[j][i] = 
+								(1.0-pnxe*psye-pie*psxi*ppyi-psxe*pnye-pnxe*pnye-pie*pnxi*ppyi)*rho_c[j][i] + 
+								pnxe*psye*rho_c[j][i+1] +
+								pie*psxi*ppyi*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								pie*pnxi*ppyi*rho_c[j-1][i+1];
+							}
+						}
+					}
+					else if( (i == (xL-1)) & (j != 0 & j != (yL - 1)) ){
+						//Right (+x) absolute boundary, not including absolute corners.
+						rho_n[j][i] = 
+						(1.0-ppxe*psye-psxe*ppye-psxe*pnye-ppxe*ppye-ppxe*pnye)*rho_c[j][i] + 
+						ppxe*psye*rho_c[j][i-1] +
+						psxe*ppye*rho_c[j-1][i] +
+						psxe*pnye*rho_c[j+1][i] +
+						ppxe*ppye*rho_c[j-1][i-1] +
+						ppxe*pnye*rho_c[j+1][i-1];
+					}
+					//Individual absolute corners.
+					else if( i == 0 & j == 0 ){
+						//Corner -x,-y.
+						rho_n[j][i] = 
+						(1.0-pnxi*psyi-psxi*pnyi-pnxi*pnyi)*rho_c[j][i] + 
+						pnxi*psyi*rho_c[j][i+1] +
+						psxi*pnyi*rho_c[j+1][i] +
+						pnxi*pnyi*rho_c[j+1][i+1];
+					}
+					else if( i == 0 & j == (yL-1) ){
+						//Corner -x,+y.
+						rho_n[j][i] = 
+						(1.0-pnxe*psye-psxe*ppye-pnxe*ppye)*rho_c[j][i] +
+						pnxe*psye*rho_c[j][i+1] +
+						psxe*ppye*rho_c[j-1][i] +
+						pnxe*ppye*rho_c[j-1][i+1];
+					}
+					else if( i == (xL-1) & j == 0 ){
+						//Corner +x,-y.
+						rho_n[j][i] = 
+						(1.0-ppxe*psye-psxe*pnye-ppxe*pnye)*rho_c[j][i] + 
+						ppxe*psye*rho_c[j][i-1] +
+						psxe*pnye*rho_c[j+1][i] +
+						ppxe*pnye*rho_c[j+1][i-1];
+					}
+					else if( (i == (xL-1)) & j == (yL-1) ){
+						//Corner +x,+y.
+						rho_n[j][i] = 
+						(1.0-ppxe*psye-psxe*ppye-ppxe*ppye)*rho_c[j][i] + 
+						ppxe*psye*rho_c[j][i-1] +
+						psxe*ppye*rho_c[j-1][i] +
+						ppxe*ppye*rho_c[j-1][i-1];
+					}
+					else{
+						printf("Error at absolute boundaries.\n")
+					}
 				}
 			} //no touch
 		} //no touch
