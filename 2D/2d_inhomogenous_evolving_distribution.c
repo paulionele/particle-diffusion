@@ -128,12 +128,12 @@ int main(){
 								ppxi*pnyi*rho_c[j+1][i-1] +
 								pnxi*ppyi*rho_c[j-1][i+1];
 							}
-							else if( (mody == 0) & (modx != 0) & (modx != (xC-1)) ){
+							else if( ((mody == 0) & (modx != 0)) & (modx != (xC-1)) ){
 								//At the -y boundary, not at corner.
 								//This case should not execute here, since only 1 unit cell in y.
 								printf("Error, -y boundary.\n");
 							}
-							else if( (mody == (yC-1) & (modx != 0) & (modx != (xC-1)) ){
+							else if( ((mody == (yC-1) & (modx != 0)) & (modx != (xC-1)) ){
 								//At the +y boundary, not at corner.
 								rho_n[j][i] = 
 								(1.0-ppxi*psyi-pnxi*psyi-psxi*ppyi-pei*psxe*pnye-ppxi*ppyi-pei*pnxe*pnye-pei*ppxe*pnye-pnxi*ppyi)*rho_c[j][i] + 
@@ -146,7 +146,7 @@ int main(){
 								pei*ppxe*pnye*rho_c[j+1][i-1] +
 								pnxi*ppyi*rho_c[j-1][i+1];
 							}
-							else if( (modx == 0) & (mody != 0) & (mody != (yC-1)) ){
+							else if( ((modx == 0) & (mody != 0)) & (mody != (yC-1)) ){
 								//At the -x boundary, not at corner.
 								rho_n[j][i] = 
 								(1.0-pei*ppxe*psye-pnxi*psyi-psxi*ppyi-psxi*pnyi-pei*ppxe*ppye-pnxi*pnyi-pei*ppxe*pnye-pnxi*ppyi)*rho_c[j][i] + 
@@ -159,7 +159,7 @@ int main(){
 								pei*ppxe*pnye*rho_c[j+1][i-1] +
 								pnxi*ppyi*rho_c[j-1][i+1];
 							}
-							else if( (modx == (xC-1)) & (mody != 0) & (mody != (yC-1)) ){
+							else if( ((modx == (xC-1)) & (mody != 0)) & (mody != (yC-1)) ){
 								//At the +x boundary, not at a corner.
 								rho_n[j][i] = 
 								(1.0-ppxi*psyi-pei*pnxe*psye-psxi*ppyi-psxi*pnyi-ppxi*ppyi-pei*pnxe*pnye-ppxi*pnyi-pei*pnxe*ppye)*rho_c[j][i] + 
@@ -227,12 +227,12 @@ int main(){
 								ppxe*pnye*rho_c[j+1][i-1] +
 								pnxe*ppye*rho_c[j-1][i+1];
 							}
-							else if( (mody == 0) & (modx != (xC)) & (modx != (xU-1)) ){
+							else if( ((mody == 0) & (modx != (xC))) & (modx != (xU-1)) ){
 								//At the -y boundary, not at corner.
 								//This case should not execute here, since only 1 unit cell in y.
 								printf("Error, -y boundary.\n");
 							}
-							else if( (mody == (yC-1)) & (modx != (xC)) & (modx != (xU-1)) ){
+							else if( ((mody == (yC-1)) & (modx != (xC))) & (modx != (xU-1)) ){
 								//At the +y boundary, not at corner. Not really a boundary.
 								//Can probably remove this completely in the future.
 								rho_n[j][i] = 
@@ -246,7 +246,7 @@ int main(){
 								ppxi*pnyi*rho_c[j+1][i-1] +
 								pnxe*ppye*rho_c[j-1][i+1];
 							}
-							else if( (modx == xC) & (mody != 0) & (mody != (yC-1)) ){
+							else if( ((modx == xC) & (mody != 0)) & (mody != (yC-1)) ){
 								//At the -x boundary, not at corner.
 								rho_n[j][i] = 
 								(1.0-pie*ppxi*psyi-pnxe*psye-psxe*ppye-psxe*pnye-pie*ppxi*ppyi-pnxe*pnye-pie*ppxi*pnyi-pnxe*ppye)*rho_c[j][i] + 
@@ -259,7 +259,7 @@ int main(){
 								pie*ppxi*pnyi*rho_c[j+1][i-1] +
 								pnxe*ppye*rho_c[j-1][i+1];
 							}
-							else if( (modx == (xU-1)) & (mody != 0) & (mody != (yC-1)) ){
+							else if( ((modx == (xU-1)) & (mody != 0)) & (mody != (yC-1)) ){
 								//At the +x boundary, not at a corner.
 								rho_n[j][i] = 
 								(1.0-ppxe*psye-pie*pnxi*psyi-psxe*ppye-psxe*pnye-ppxe*ppye-pie*pnxi*pnyi-ppxe*pnye-pie*pnxi*ppyi)*rho_c[j][i] + 
@@ -316,18 +316,152 @@ int main(){
 						The lattice site is in the lower half of the 2D array and is only
 						in extracellular region. Refer to cell model.
 						*/
+						if( (mody != yC) & (mody != (yU-1)) ){
+							//Lattice site is not at -y,+y extracellular boundaries or any corners.
+							rho_n[j][i] = 
+							(1.0-ppxe*psye-pnxe*psye-psxe*ppye-psxe*pnye-ppxe*ppye-pnxe*pnye-ppxe*pnye-pnxe*ppye)*rho_c[j][i] + 
+							ppxe*psye*rho_c[j][i-1] +
+							pnxe*psye*rho_c[j][i+1] +
+							psxe*ppye*rho_c[j-1][i] +
+							psxe*pnye*rho_c[j+1][i] +
+							ppxe*ppye*rho_c[j-1][i-1] +
+							pnxe*pnye*rho_c[j+1][i+1] +
+							ppxe*pnye*rho_c[j+1][i-1] +
+							pnxe*ppye*rho_c[j-1][i+1];
+						}
+						if( (mody == yC & mod < xC){
+							//Along the cellular boundary.
+							if(modx != 0 & modx!= (xC-1)){
+								//Along the -y boundary, not at a corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pnxe*psye-pie*psxi*ppyi-psxe*pnye-pie*ppxi*ppyi-pnxe*pnye-ppxe*pnye-pie*pnxi*ppyi)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								pie*psxi*ppyi*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								pie*ppxi*ppyi*rho_c[j-1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
+								pie*pnxi*ppyi*rho_c[j-1][i+1];								
+							}
+							else if(modx == 0){
+								//At the -x,-y corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pnxe*psye-pie*psxi*ppyi-psxe*pnye-ppxe*ppye-pnxe*pnye-ppxe*pnye-pie*pnxi*ppyi)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								pie*psxi*ppyi*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								ppxe*ppye*rho_c[j-1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
+								pie*pnxi*ppyi*rho_c[j-1][i+1];
+							}
+							else if(modx == (xC-1)){
+								//At the +x,-y corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pnxe*psye-pie*psxi*ppyi-psxe*pnye-pie*ppxi*ppyi-pnxe*pnye-ppxe*pnye-pnxe*ppye)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								pie*psxi*ppyi*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								pie*ppxi*ppyi*rho_c[j-1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
+								pnxe*ppye*rho_c[j-1][i+1];
+							}
+							else{
+								printf("An issue exists.\n");
+							}
+						}
+						else if( mody == yC & mod > (xC-1){
+							//Along the cellular boundary.
+							if(modx != xC & modx!= (xU-1)){
+								//Along the -y boundary, not at a corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pnxe*psye-psxe*ppye-psxe*pnye-ppxe*ppye-pnxe*pnye-ppxe*pnye-pnxe*ppye)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								ppxe*ppye*rho_c[j-1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
+								pnxe*ppye*rho_c[j-1][i+1];
+							}
+							else if(modx == xC){
+								//At the -x,-y corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pnxe*psye-psxe*ppye-psxe*pnye-pie*ppxi*ppyi-pnxe*pnye-ppxe*pnye-pnxe*ppye)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								pie*ppxi*ppyi*rho_c[j-1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
+								pnxe*ppye*rho_c[j-1][i+1];
+							}
+							else if(modx == (xU-1)){
+								//At the +x,-y corner.
+								rho_n[j][i] = 
+								(1.0-ppxe*psye-pnxe*psye-psxe*ppye-psxe*pnye-ppxe*ppye-pnxe*pnye-ppxe*pnye-pie*pnxi*ppyi)*rho_c[j][i] + 
+								ppxe*psye*rho_c[j][i-1] +
+								pnxe*psye*rho_c[j][i+1] +
+								psxe*ppye*rho_c[j-1][i] +
+								psxe*pnye*rho_c[j+1][i] +
+								ppxe*ppye*rho_c[j-1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
+								pie*pnxi*ppyi*rho_c[j-1][i+1];
+							}
+							else{
+								printf("An issue exists.\n");
+							}
+						}
 					}
 				}
 				else{
-					//At an absolute boundary.					
+					//At an absolute boundary.
+					if( (j == 0) & (i != 0 & i != (xL - 1)) ){
+						//Upper (-y) absolute boundary, not including corners.
+					}
+					else if( (j == 0) & (i != 0 & i != (xL - 1)) ){
+						//Lower (+y) absolute boundary, not including corners.
+					}
+					else if( (i == 0) & (j != 0 & j != (yL - 1)) ){
+						//Left (-x) absolute boundary, not including corners.
+					}
+					else if( (i == (xL-1)) & (j != 0 & j != (yL - 1)) ){
+						//Left (+x) absolute boundary, not including corners.
+					}
+
+					//Individual corners.
+					else if( i == 0 & j == 0 ){
+						//Corner -x,-y.
+					}
+					else if( i == 0 & j == (yL-1) ){
+						//Corner -x,+y.
+					}
+					else if( i == (xL-1) & j == 0 ){
+						//Corner +x,-y.
+					}
+					else if( (i == (xL-1)) & j == (yL-1) ){
+						//Corner +x,+y.
+					}
+
+
 				}
 			} //no touch
 		} //no touch
 
 
 		//Writing dd data to file.
-		for (i = 0; i < xL; i++){
-			fprintf(outdists, "%f ", rho_n[i]);
+		for (j = 0; j < yL; j++){
+			for(i = 0; i < xL; i++){
+				fprintf(outdists, "%d ", rho[j][i]);
+			}
+			fprintf(outdists, "\n");
 		}
 		fprintf(outdists, "\n");
 	}
