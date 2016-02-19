@@ -11,12 +11,15 @@ boundary conditions applied.
 #define N 100	//can be set to whatever.
 #define xC 15
 #define xE 15
+#define yC 15
+#define yE 15
 #define nU 3
+#define mU 1
 
 int main(){
 	//Index variables; for-loops and time-step limit.
 	int i, j;
-	int t, tmax = 20000;
+	int t, tmax = 200;
 
 	//Unit cell dimensions.
 	int xU = xC + xE;
@@ -56,11 +59,11 @@ int main(){
 	//Stepping probabilities (arb. chosen) for intracellular.
 	//Physical model: intracellular regions less diffusive (more viscous).
 	double pnxi = 0.2, ppxi = 0.2, psxi = 1.0 - pnxi - ppxi;
-	double pnyi = 0.2, ppyi = 0.2; psyi = 1.0 - pnyi - ppyi;
+	double pnyi = 0.2, ppyi = 0.2, psyi = 1.0 - pnyi - ppyi;
 	//Stepping probabilities (arb. chosen) for extracellular.
 	//Physical model: extracellular regions more diffusive (less viscous).
-	double pnxe = 0.4, ppxe = 0.4; psxe = 1.0 - pnxe - ppxe;
-	double pnye = 0.4, ppye = 0.4; psye = 1.0 - pnye - ppye;
+	double pnxe = 0.4, ppxe = 0.4, psxe = 1.0 - pnxe - ppxe;
+	double pnye = 0.4, ppye = 0.4, psye = 1.0 - pnye - ppye;
 	//Transition probabilities between cell types.
 	double pie = 0.025;
 	double pei = (pnxi/pnxe)*pie;
@@ -69,8 +72,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-3k_xU-3_pi-0.1_pe-0.2-pie-0.05.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-3k_xU-3_pi-0.1_pe-0.2-pie-0.05_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/FD_test1.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/FD_test1_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -99,7 +102,7 @@ int main(){
 
 				//Some clarifying statements to be added...
 				ucolx = (int)(i/xU);
-				ucoly = (int)(j/yU)
+				ucoly = (int)(j/yU);
 				modx = (int)(i - ucolx*xU);
 				mody = (int)(j - ucoly*yU);
 
@@ -128,12 +131,12 @@ int main(){
 								ppxi*pnyi*rho_c[j+1][i-1] +
 								pnxi*ppyi*rho_c[j-1][i+1];
 							}
-							else if( ((mody == 0) & (modx != 0)) & (modx != (xC-1)) ){
+							else if( (mody == 0) & (modx != 0) & modx != (xC-1) ){
 								//At the -y boundary, not at corner.
 								//This case should not execute here, since only 1 unit cell in y.
 								printf("Error, -y boundary.\n");
 							}
-							else if( ((mody == (yC-1) & (modx != 0)) & (modx != (xC-1)) ){
+							else if( mody == (yC-1) & (modx != 0) & modx != (xC-1) ){
 								//At the +y boundary, not at corner.
 								rho_n[j][i] = 
 								(1.0-ppxi*psyi-pnxi*psyi-psxi*ppyi-pei*psxe*pnye-ppxi*ppyi-pei*pnxe*pnye-pei*ppxe*pnye-pnxi*ppyi)*rho_c[j][i] + 
@@ -207,14 +210,14 @@ int main(){
 								pnxi*ppyi*rho_c[j-1][i+1];
 							}
 							else{
-								printf("Lattice site location error in cellular region.\n")
+								printf("Lattice site location error in cellular region.\n");
 							}
 						}
 //---------------
 						else{
 							//Lattice site is in upper half extracellular region.
 							//Testing for 2 different boundaries and 2 corner sites.
-							if( ((modx != xC) & (modx != (xU-1)) & ((mody != 0) & (mody != (yC-1))) ){
+							if( (modx != xC & modx != (xU-1)) & (mody != 0 & mody != (yC-1)) ){
 								//Lattice site is not at extracellular boundaries.
 								rho_n[j][i] = 
 								(1.0-ppxe*psye-pnxe*psye-psxe*ppye-psxe*pnye-ppxe*ppye-pnxe*pnye-ppxe*pnye-pnxe*ppye)*rho_c[j][i] + 
@@ -329,7 +332,7 @@ int main(){
 							ppxe*pnye*rho_c[j+1][i-1] +
 							pnxe*ppye*rho_c[j-1][i+1];
 						}
-						if( (mody == yC & mod < xC){
+						if( mody == yC & modx < xC ){
 							//Along the cellular boundary.
 							if(modx != 0 & modx!= (xC-1)){
 								//Along the -y boundary, not at a corner.
@@ -374,7 +377,7 @@ int main(){
 								printf("An issue exists.\n");
 							}
 						}
-						else if( mody == yC & mod > (xC-1){
+						else{ // mody == yC & mod > (xC-1
 							//Along the cellular boundary.
 							if(modx != xC & modx!= (xU-1)){
 								//Along the -y boundary, not at a corner.
@@ -595,7 +598,7 @@ int main(){
 						ppxe*ppye*rho_c[j-1][i-1];
 					}
 					else{
-						printf("Error at absolute boundaries.\n")
+						printf("Error at absolute boundaries.\n");
 					}
 				}
 			} //no touch
@@ -605,7 +608,7 @@ int main(){
 		//Writing dd data to file.
 		for (j = 0; j < yL; j++){
 			for(i = 0; i < xL; i++){
-				fprintf(outdists, "%d ", rho[j][i]);
+				fprintf(outdists, "%f ", rho_n[j][i]);
 			}
 			fprintf(outdists, "\n");
 		}
