@@ -423,33 +423,6 @@ int main(){
 				}
 				else{
 					//At an absolute boundary.
-					if( (j == 0) & (i != 0 & i != (xL - 1)) ){
-						//Upper (-y) absolute boundary, not including corners.
-					}
-					else if( (j == 0) & (i != 0 & i != (xL - 1)) ){
-						//Lower (+y) absolute boundary, not including corners.
-					}
-					else if( (i == 0) & (j != 0 & j != (yL - 1)) ){
-						//Left (-x) absolute boundary, not including corners.
-					}
-					else if( (i == (xL-1)) & (j != 0 & j != (yL - 1)) ){
-						//Left (+x) absolute boundary, not including corners.
-					}
-
-					//Individual corners.
-					else if( i == 0 & j == 0 ){
-						//Corner -x,-y.
-					}
-					else if( i == 0 & j == (yL-1) ){
-						//Corner -x,+y.
-					}
-					else if( i == (xL-1) & j == 0 ){
-						//Corner +x,-y.
-					}
-					else if( (i == (xL-1)) & j == (yL-1) ){
-						//Corner +x,+y.
-					}
-
 
 				}
 			} //no touch
