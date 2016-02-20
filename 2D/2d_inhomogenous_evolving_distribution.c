@@ -13,13 +13,13 @@ boundary conditions applied.
 #define xE 15
 #define yC 15
 #define yE 15
-#define nU 3
+#define nU 11
 #define mU 1
 
 int main(){
 	//Index variables; for-loops and time-step limit.
 	int i, j;
-	int t, tmax = 200;
+	int t, tmax = 20000;
 
 	//Unit cell dimensions.
 	int xU = xC + xE;
@@ -58,8 +58,8 @@ int main(){
 
 	//Stepping probabilities (arb. chosen) for intracellular.
 	//Physical model: intracellular regions less diffusive (more viscous).
-	double pnxi = 0.2, ppxi = 0.2, psxi = 1.0 - pnxi - ppxi;
-	double pnyi = 0.2, ppyi = 0.2, psyi = 1.0 - pnyi - ppyi;
+	double pnxi = 0.05, ppxi = 0.05, psxi = 1.0 - pnxi - ppxi;
+	double pnyi = 0.05, ppyi = 0.05, psyi = 1.0 - pnyi - ppyi;
 	//Stepping probabilities (arb. chosen) for extracellular.
 	//Physical model: extracellular regions more diffusive (less viscous).
 	double pnxe = 0.4, ppxe = 0.4, psxe = 1.0 - pnxe - ppxe;
@@ -94,11 +94,11 @@ int main(){
 			
 			for(i = 0; i < xL; i++){
 				
-				if(rho_c[j][i] == 0){
-					//No particles at current site, skip the remaining statements.
-					//Probably doesn't provide much speed improvement in long run?!
-					continue;
-				}
+				// if(rho_c[j][i] == 0){
+				// 	//No particles at current site, skip the remaining statements.
+				// 	//Probably doesn't provide much speed improvement in long run?!
+				// 	continue;
+				// }
 
 				//Some clarifying statements to be added...
 				ucolx = (int)(i/xU);
