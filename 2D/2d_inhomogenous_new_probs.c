@@ -1,4 +1,7 @@
 /* 
+DO NOT USE: This program contains the old particle movement algorithm. Future
+modifications should be done on 2d_inhmogenous.c
+
 Diffusion simulation on 2D, inhomogeneous lattice. 
 
 Representation of lattice inhomogeneity.
@@ -245,11 +248,11 @@ int main(){
 				*/
 
 				//Motion in x.
-				if(rnd1 < pnxi){
+				if(rnd1 < pnxe){
 					//Generate position if to move -a in x-direction.
 					testx = x[n] - a;
 				}
-				else if(rnd1 < pnxi + ppxi){
+				else if(rnd1 < pnxe + ppxe){
 					//Generate position if to move +a in x-direction.
 					testx = x[n] + a;
 				}
@@ -259,11 +262,11 @@ int main(){
 				}
 				
 				//Motion in y.
-				if(rnd2 < pnyi){
+				if(rnd2 < pnye){
 					//Generate position if to move -a in y-direction.
 					testy = y[n] - a;
 				}
-				else if(rnd2 < pnyi + ppyi){
+				else if(rnd2 < pnye + ppye){
 					//Generate position if to move +a in y-direction.
 					testy = y[n] + a;
 				}
