@@ -8,12 +8,12 @@ boundary conditions applied.
 #include "stdlib.h"
 #include "math.h"
 
-#define N 100	//can be set to whatever.
+#define N 1000	//can be set to whatever.
 #define xC 15
 #define xE 15
 #define yC 15
 #define yE 15
-#define nU 11
+#define nU 3
 #define mU 1
 
 int main(){
@@ -131,11 +131,6 @@ int main(){
 								ppxi*pnyi*rho_c[j+1][i-1] +
 								pnxi*ppyi*rho_c[j-1][i+1];
 							}
-							else if( (mody == 0) & (modx != 0) & modx != (xC-1) ){
-								//At the -y boundary, not at corner.
-								//This case should not execute here, since only 1 unit cell in y.
-								printf("Error, -y boundary.\n");
-							}
 							else if( mody == (yC-1) & (modx != 0) & modx != (xC-1) ){
 								//At the +y boundary, not at corner.
 								rho_n[j][i] = 
@@ -174,14 +169,6 @@ int main(){
 								pei*pnxe*pnye*rho_c[j+1][i+1] +
 								ppxi*pnyi*rho_c[j+1][i-1] +
 								pei*pnxe*ppye*rho_c[j-1][i+1];
-							}
-							else if( modx == 0 & mody == 0){
-								//At the -x,-y corner.
-								printf("Error, -x,-y corner.\n");
-							}
-							else if( modx == (xC-1) & mody == 0){
-								//At the +x,-y corner.
-								printf("Error, +x,-y corner.\n");
 							}
 							else if( modx == (xC-1) & mody == (yC-1) ){
 								//At the +x,+y corner.
@@ -230,23 +217,19 @@ int main(){
 								ppxe*pnye*rho_c[j+1][i-1] +
 								pnxe*ppye*rho_c[j-1][i+1];
 							}
-							else if( ((mody == 0) & (modx != (xC))) & (modx != (xU-1)) ){
-								//At the -y boundary, not at corner.
-								//This case should not execute here, since only 1 unit cell in y.
-								printf("Error, -y boundary.\n");
-							}
 							else if( ((mody == (yC-1)) & (modx != (xC))) & (modx != (xU-1)) ){
 								//At the +y boundary, not at corner. Not really a boundary.
 								//Can probably remove this completely in the future.
+								//Fixed an error here, wrong 'transition probabilities' were used. Really, there is no barrier.
 								rho_n[j][i] = 
-								(1.0-ppxe*psye-pnxe*psye-psxe*ppye-psxi*pnyi-ppxe*ppye-pnxi*pnyi-ppxi*pnyi-pnxe*ppye)*rho_c[j][i] + 
+								(1.0-ppxe*psye-pnxe*psye-psxe*ppye-psxe*pnye-ppxe*ppye-pnxi*pnye-ppxe*pnye-pnxe*ppye)*rho_c[j][i] + 
 								ppxe*psye*rho_c[j][i-1] +
 								pnxe*psye*rho_c[j][i+1] +
 								psxe*ppye*rho_c[j-1][i] +
-								psxi*pnyi*rho_c[j+1][i] +
+								psxe*pnye*rho_c[j+1][i] +
 								ppxe*ppye*rho_c[j-1][i-1] +
-								pnxi*pnyi*rho_c[j+1][i+1] +
-								ppxi*pnyi*rho_c[j+1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
 								pnxe*ppye*rho_c[j-1][i+1];
 							}
 							else if( ((modx == xC) & (mody != 0)) & (mody != (yC-1)) ){
@@ -275,38 +258,32 @@ int main(){
 								ppxe*pnye*rho_c[j+1][i-1] +
 								pie*pnxi*ppyi*rho_c[j-1][i+1];
 							}
-							else if( modx == xC & mody == 0){
-								//At the -x,-y corner.
-								printf("Error, -x,-y corner.\n");
-							}
-							else if( modx == (xU-1) & mody == 0){
-								//At the +x,-y corner.
-								printf("Error, +x,-y corner.\n");
-							}
 							else if( modx == (xU-1) & mody == (yC-1) ){
 								//At the +x,+y corner.
+								//Fixed error here.
 								rho_n[j][i] = 
-								(1.0-ppxe*psye-pie*pnxi*psyi-psxe*ppye-pie*psxi*pnyi-ppxe*ppye-pie*pnxi*pnyi-pie*ppxi*pnyi-pie*pnxi*ppyi)*rho_c[j][i] + 
+								(1.0-ppxe*psye-pie*pnxi*psyi-psxe*ppye-psxe*pnye-ppxe*ppye-pnxe*pnye-ppxe*pnye-pie*pnxi*ppyi)*rho_c[j][i] + 
 								ppxe*psye*rho_c[j][i-1] +
 								pie*pnxi*psyi*rho_c[j][i+1] +
 								psxe*ppye*rho_c[j-1][i] +
-								pie*psxi*pnyi*rho_c[j+1][i] +
+								psxe*pnye*rho_c[j+1][i] +
 								ppxe*ppye*rho_c[j-1][i-1] +
-								pie*pnxi*pnyi*rho_c[j+1][i+1] +
-								pie*ppxi*pnyi*rho_c[j+1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
 								pie*pnxi*ppyi*rho_c[j-1][i+1];
 							}
 							else if( modx == xC & mody == (yC-1) ){
 								//At the -x,+y corner.
+								//Fixed error here.
 								rho_n[j][i] = 
-								(1.0-pie*ppxi*psyi-pnxe*psye-psxe*ppye-pie*psxi*pnyi-pie*ppxi*ppyi-pie*pnxi*pnyi-pie*ppxi*pnyi-pnxe*ppye)*rho_c[j][i] + 
+								(1.0-pie*ppxi*psyi-pnxe*psye-psxe*ppye-psxe*pnye-pie*ppxi*ppyi-pnxe*pnye-ppxe*pnye-pnxe*ppye)*rho_c[j][i] + 
 								pie*ppxi*psyi*rho_c[j][i-1] +
 								pnxe*psye*rho_c[j][i+1] +
 								psxe*ppye*rho_c[j-1][i] +
-								pie*psxi*pnyi*rho_c[j+1][i] +
+								psxe*pnye*rho_c[j+1][i] +
 								pie*ppxi*ppyi*rho_c[j-1][i-1] +
-								pie*pnxi*pnyi*rho_c[j+1][i+1] +
-								pie*ppxi*pnyi*rho_c[j+1][i-1] +
+								pnxe*pnye*rho_c[j+1][i+1] +
+								ppxe*pnye*rho_c[j+1][i-1] +
 								pnxe*ppye*rho_c[j-1][i+1];
 							}
 							else{
@@ -377,7 +354,7 @@ int main(){
 								printf("An issue exists.\n");
 							}
 						}
-						else{ // mody == yC & mod > (xC-1
+						else{ // mody == yC & mod > (xC-1)
 							//Along the cellular boundary.
 							if(modx != xC & modx!= (xU-1)){
 								//Along the -y boundary, not at a corner.
@@ -451,7 +428,7 @@ int main(){
 								pei*ppxe*pnye*rho_c[j+1][i-1];
 							}
 							else{
-								//At +y,-y corner.
+								//At +x,-y corner.
 								rho_n[j][i] = 
 								(1.0-ppxi*psyi-pei*pnxe*psye-psxi*pnyi-pei*pnxe*pnye-ppxi*pnyi)*rho_c[j][i] + 
 								ppxi*psyi*rho_c[j][i-1] +
@@ -531,16 +508,17 @@ int main(){
 							}	
 						}
 						else{
-							//In extrracellular region.
+							//In extracellular region.
 							if(mody != yC){
 								//Along -x absolute boundary, not at corner.
+								//Fixed error here.
 								rho_n[j][i] = 
-								(1.0-pnxe*psye-psxe*ppye-psxe*pnye-pnxe*pnye-ppxe*pnye)*rho_c[j][i] + 
+								(1.0-pnxe*psye-psxe*ppye-psxe*pnye-pnxe*pnye-pnxe*ppye)*rho_c[j][i] + 
 								pnxe*psye*rho_c[j][i+1] +
 								psxe*ppye*rho_c[j-1][i] +
 								psxe*pnye*rho_c[j+1][i] +
 								pnxe*pnye*rho_c[j+1][i+1] +
-								ppxe*pnye*rho_c[j+1][i-1];
+								pnxe*ppye*rho_c[j-1][i+1];
 							}
 							else{
 								//At -x,-y corner.
