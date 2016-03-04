@@ -17,20 +17,20 @@ solution to get the program running producing data for modeling.
 #include "math.h"
 
 // Parameters for characterization of entire 2D inhomogeneous lattice.
-#define N 500000	//number of particles
-#define xC 11		//x length of cellular space
-#define yC 11		//y length of cellular space
-#define xE 11		//x length of extracellular space
-#define yE 11		//y length of extracellular space
-#define nU 3		//number of unit cells in row
+#define N 500000 	//number of particles
+#define xC 11			//x length of cellular space
+#define yC 11			//y length of cellular space
+#define xE 11			//x length of extracellular space
+#define yE 11			//y length of extracellular space
+#define nU 17			//number of unit cells in row
 #define mU 1        //number of unit cells in column
-#define mR 0		//number of rows (NOT USED)
+#define mR 0				//number of rows (NOT USED)
 #define nR 0        //number of columns (NOT USED)
 
 int main(){
 	//Index variables; for-loops and time-step limit.
 	int i, j, n;
-	int t, tmax = 10000;
+	int t, tmax = 15000;
 
 	//Unit cell dimensions.
 	int xU = xC + xE;
@@ -85,11 +85,11 @@ int main(){
 	double pnye = 0.4, ppye = 0.4;
 	//Coupled probabilities crossing from intra to extra (pie) or extra to intra (pei).
 	//Although pie (or pei) arbitrarily chosen, these values are related. 
-	double pie = 0.025;
+	double pie = 0.0;
 	double pei = (pnxi/pnxe)*pie; 
 
 	//Random variables and variables for MSD calculations.
-	double rnd1, rnd2;
+	double rnd1;
 	double resultant_x, resultant_y, resultant_x_sq, resultant_y_sq, sum_resultant, msd;
 	double sum_x, sum_x2, avg_x, avg_x2;
 	double sum_y, sum_y2, avg_y, avg_y2;
@@ -98,8 +98,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-10k_N-500k_xU-3_pi-0.2_pe-0.4_pie-0.025.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-10k_N-500k_xU-3_pi-0.2_pe-0.4_pie-0.025_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-15k_N-1000k_xU-17_pi-0.2_pe-0.4_pie-0.025.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-15k_N-1000k_xU-17_pi-0.2_pe-0.4_pie-0.025_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -161,37 +161,31 @@ int main(){
 				Test membership of random number to 4 intervals.
 				Each interval represents a different particle direction.
 				*/
-				rnd1 = (double)rand()/(double)RAND_MAX; //used for x motion.
-				rnd2 = (double)rand()/(double)RAND_MAX; //used for y motion.
-				/* 
-				Updated algorithm; particle movement in x, followed by particle
-				movement in y. Two moves per time step.
-				*/
-
-				//Movement in x.
-				if(rnd1 < pnxi){
+				rnd1 = (double)rand()/(double)RAND_MAX; //for movement
+				
+				if (rnd1 < pnxi){
 					//Generate position if to move -a in x-direction.
 					testx = x[n] - a;
+					testy = y[n];				
 				}
-				else if(rnd1 < pnxi + ppxi){
+				else if(rnd1 < (pnxi + ppxi)){
 					//Generate position if to move +a in x-direction.
 					testx = x[n] + a;
+					testy = y[n];
 				}
-				else{
-					//Generate position if to stay in current position.
-					testx = x[n];
-				}
-				//Movement in y.
-				if(rnd2 < pnyi){
+				else if(rnd1 < (pnxi + ppxi + pnyi)){
 					//Generate position if to move -a in y-direction.
+					testx = x[n];
 					testy = y[n] - a;
 				}
-				else if(rnd2 < pnyi + ppyi){
+				else if(rnd1 < (pnxi + ppxi + pnyi + ppyi)){
 					//Generate position if to move +a in y-direction.
+					testx = x[n];
 					testy = y[n] + a;
 				}
 				else{
 					//Generate position if to stay in current position.
+					testx = x[n];
 					testy = y[n];
 				}
 			}
@@ -200,46 +194,39 @@ int main(){
 				Apply extracellular conditions to test particle.
 				Test membership of random number to 4 intervals.
 				Each interval represents a different particle direction.
-				*/
-				rnd1 = (double)rand()/(double)RAND_MAX; //used for x motion.
-				rnd2 = (double)rand()/(double)RAND_MAX; //used for y motion.
-				/* 
-				Updated algorithm; particle movement in x, followed by particle
-				movement in y. Two moves per time step.
-				*/
-				//Movement in x.
-				if(rnd1 < pnxe){
+				*/				
+				rnd1 = (double)rand()/(double)RAND_MAX;
+				if (rnd1 < pnxe){
 					//Generate position if to move -a in x-direction.
 					testx = x[n] - a;
+					testy = y[n];
 				}
-				else if(rnd1 < pnxe + ppxe){
+				else if(rnd1 < (pnxe + ppxe)){
 					//Generate position if to move +a in x-direction.
 					testx = x[n] + a;
+					testy = y[n];
 				}
-				else{
-					//Generate position if to stay in current position.
-					testx = x[n];
-				}
-				//Movement in y.
-				if(rnd2 < pnye){
+				else if(rnd1 < (pnxe + ppxe + pnye)){
 					//Generate position if to move -a in y-direction.
+					testx = x[n];
 					testy = y[n] - a;
 				}
-				else if(rnd2 < pnye + ppye){
+				else if(rnd1 < (pnxe + ppxe + pnye + ppye)){
 					//Generate position if to move +a in y-direction.
+					testx = x[n];
 					testy = y[n] + a;
 				}
 				else{
 					//Generate position if to stay in current position.
+					testx = x[n];
 					testy = y[n];
 				}
 			}
-			//Removed XOR logical operation: !(testx != x[n]) != !(testy != y[n])
-			if(!(testx == x[n] & testy == y[n])){
-				/*
-				Determine motion of the particle depending on test position.
-				If [NOT(True and True)]: if the particle has moved.
-				*/
+			//The XOR logical op cannot be used is motion is possible in both x and y.
+			//For the case of indep movement in x,y: !(testx == x[n] & testy == y[n])
+			//if [NOT(True and True)]: if the particle has moved.
+			if( !(testx != x[n]) != !(testy != y[n]) ){
+				//Determine motion of the particle depending on test position.
 				if(testx >= 0 && testx < xL && testy >= 0 && testy < yL){
 					/*
 					If particle is within absolute array limits...
@@ -354,13 +341,15 @@ int main(){
 
 		//Writing mean-square-displacement data to file.
 		//Done after looping over all particles; done once per time step.
-		msd = sum_resultant/(double)N;
+		msd = sum_resultant/(double)N; //push straight to output if needed
 		avg_x = sum_x/(double)N;
 		avg_y = sum_y/(double)N;
 		avg_x2 = sum_x2/(double)N;
 		avg_y2 = sum_y2/(double)N;
 
-		fprintf(outstats, "%f %f %f\n", avg_x2-avg_x*avg_x, avg_y2-avg_y*avg_y, msd);
+		//Can change output to provide information only on x.
+		fprintf(outstats, "%f %f %f\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
+		//fprintf(outstats, "%f %f %f\n", avg_x2-avg_x*avg_x, avg_y2-avg_y*avg_y, msd);
 	}
 	//return 0;
 }
