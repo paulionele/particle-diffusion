@@ -30,7 +30,7 @@ solution to get the program running producing data for modeling.
 int main(){
 	//Index variables; for-loops and time-step limit.
 	int i, j, n;
-	int t, tmax = 15000;
+	int t, tmax = 10000;
 
 	//Unit cell dimensions.
 	int xU = xC + xE;
@@ -77,15 +77,15 @@ int main(){
 	double a = 1.0;
 	//Stepping probabilities (arb. chosen) for intracellular.
 	//Physical model: intracellular regions less diffusive (more viscous).
-	double pnxi = 0.2, ppxi = 0.2;
-	double pnyi = 0.2, ppyi = 0.2;
+	double pnxi = 0.1, ppxi = 0.1;
+	double pnyi = 0.1, ppyi = 0.1;
 	//Stepping probabilities (arb. chosen) for extracellular.
 	//Physical model: extracellular regions more diffusive (less viscous).
-	double pnxe = 0.4, ppxe = 0.4;
-	double pnye = 0.4, ppye = 0.4;
+	double pnxe = 0.2, ppxe = 0.2;
+	double pnye = 0.2, ppye = 0.2;
 	//Coupled probabilities crossing from intra to extra (pie) or extra to intra (pei).
 	//Although pie (or pei) arbitrarily chosen, these values are related. 
-	double pie = 0.0;
+	double pie = 0.025;
 	double pei = (pnxi/pnxe)*pie; 
 
 	//Random variables and variables for MSD calculations.
@@ -98,8 +98,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-15k_N-1000k_xU-17_pi-0.2_pe-0.4_pie-0.025.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/t-15k_N-1000k_xU-17_pi-0.2_pe-0.4_pie-0.025_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/01_t-15k_N-1000k_xU-17_pi-0.2_pe-0.4_pie-0.025.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/01_t-15k_N-1000k_xU-17_pi-0.2_pe-0.4_pie-0.025_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -222,10 +222,11 @@ int main(){
 					testy = y[n];
 				}
 			}
-			//The XOR logical op cannot be used is motion is possible in both x and y.
+			//The XOR logical op cannot be used if motion is in both x and y.
 			//For the case of indep movement in x,y: !(testx == x[n] & testy == y[n])
 			//if [NOT(True and True)]: if the particle has moved.
 			if( !(testx != x[n]) != !(testy != y[n]) ){
+				//Will not enter if particle has not moved.
 				//Determine motion of the particle depending on test position.
 				if(testx >= 0 && testx < xL && testy >= 0 && testy < yL){
 					/*
@@ -263,14 +264,12 @@ int main(){
 					
 					/*
 					Has the particle moved to a different cell region?
-					Particle positions are assigned in the next few if-else
-					clauses depending on current state and future state. This is
-					where particle positions are updated!
+					Particle positions are updated below.
 					*/
 					if(state == teststate){
 						/*
-						Particle has not moved to different cell region. Simply
-						set particle position to proposed position.
+						Particle has not moved to different cell region.
+						Particle position is simply set to proposed position.
 						*/
 						x[n] = testx;
 						y[n] = testy;
@@ -280,8 +279,11 @@ int main(){
 						Particle is in intracellular region and at boundary.
 						Future position is possibly extracellular region.
 						Draw random number to determine movement.
-						*/
 
+						The probability that movement into new region occurs
+						is the probability of stepping towards product with
+						the transition probability.
+						*/
 						rnd1 = (double)rand()/(double)RAND_MAX;
 						if(rnd1 < pie){
 							//Particle will cross boundary into extracellular region.
@@ -347,7 +349,7 @@ int main(){
 		avg_x2 = sum_x2/(double)N;
 		avg_y2 = sum_y2/(double)N;
 
-		//Can change output to provide information only on x.
+		//Can change output to provide information only on MSDx.
 		fprintf(outstats, "%f %f %f\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
 		//fprintf(outstats, "%f %f %f\n", avg_x2-avg_x*avg_x, avg_y2-avg_y*avg_y, msd);
 	}
