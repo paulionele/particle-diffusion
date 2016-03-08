@@ -18,11 +18,11 @@ solution to get the program running producing data for modeling.
 
 // Parameters for characterization of entire 2D inhomogeneous lattice.
 #define N 500000 	//number of particles
-#define xC 11			//x length of cellular space
-#define yC 11			//y length of cellular space
-#define xE 11			//x length of extracellular space
-#define yE 11			//y length of extracellular space
-#define nU 17			//number of unit cells in row
+#define xC 15			//x length of cellular space
+#define yC 15			//y length of cellular space
+#define xE 15			//x length of extracellular space
+#define yE 15			//y length of extracellular space
+#define nU 21			//number of unit cells in row
 #define mU 1        //number of unit cells in column
 #define mR 0				//number of rows (NOT USED)
 #define nR 0        //number of columns (NOT USED)
@@ -30,7 +30,7 @@ solution to get the program running producing data for modeling.
 int main(){
 	//Index variables; for-loops and time-step limit.
 	int i, j, n;
-	int t, tmax = 10000;
+	int t, tmax = 30000;
 
 	//Unit cell dimensions.
 	int xU = xC + xE;
@@ -77,15 +77,15 @@ int main(){
 	double a = 1.0;
 	//Stepping probabilities (arb. chosen) for intracellular.
 	//Physical model: intracellular regions less diffusive (more viscous).
-	double pnxi = 0.1, ppxi = 0.1;
-	double pnyi = 0.1, ppyi = 0.1;
+	double pnxi = 0.05, ppxi = 0.05;
+	double pnyi = 0.05, ppyi = 0.05;
 	//Stepping probabilities (arb. chosen) for extracellular.
 	//Physical model: extracellular regions more diffusive (less viscous).
 	double pnxe = 0.2, ppxe = 0.2;
 	double pnye = 0.2, ppye = 0.2;
 	//Coupled probabilities crossing from intra to extra (pie) or extra to intra (pei).
 	//Although pie (or pei) arbitrarily chosen, these values are related. 
-	double pie = 0.025;
+	double pie = 0.01;
 	double pei = (pnxi/pnxe)*pie; 
 
 	//Random variables and variables for MSD calculations.
@@ -98,8 +98,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/01_t-15k_N-1000k_xU-17_pi-0.2_pe-0.4_pie-0.025.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/01_t-15k_N-1000k_xU-17_pi-0.2_pe-0.4_pie-0.025_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/MC_t-30k_N-500k_nU-21_pi-0.05_pe-0.2_pie-0.01.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/MC_t-30k_N-500k_nU-21_pi-0.05_pe-0.2_pie-0.01_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w");
 	outstats = fopen(f2, "w");
@@ -337,6 +337,7 @@ int main(){
 			for(i = 0; i < xL; i++){
 				fprintf(outdists, "%d ", rho[j][i]);
 			}
+			fprintf(outdists, "%d ", 0); //creates a density reference for plotting
 			fprintf(outdists, "\n");
 		}
 		fprintf(outdists, "\n");
@@ -352,11 +353,9 @@ int main(){
 		//Can change output to provide information only on MSDx.
 		fprintf(outstats, "%f %f %f\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
 		//fprintf(outstats, "%f %f %f\n", avg_x2-avg_x*avg_x, avg_y2-avg_y*avg_y, msd);
-	}
-	//return 0;
-}
 
-// get_argv(){
-// 	//Get command-line arguments.
-// 	//
-// }
+		if(t%500 == 0){
+			printf("%i\n",t);
+		}
+	}
+}
