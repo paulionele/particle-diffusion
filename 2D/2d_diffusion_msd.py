@@ -29,7 +29,7 @@ def regression(times, col3):
 	return slope, intercept
 
 #scriptname, filename = argv #unpacking the argument variables
-filename = '01_t-15k_N-1000k_xU-17_pi-0.2_pe-0.4_pie-0.025_stats.txt'
+filename = 'FD_t-30k_N-1_nU-21_pi-0.05_pe-0.2_pie-0.01_stats.txt'
 savepath = '/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/'
 filepath = path.join(savepath,filename)
 
@@ -56,19 +56,19 @@ th1 = 10
 ts2 = 0
 th2 = ts
 
-#Fitting a line through the data range specified in the regression window.
-#Note the factor to obtain D from slope; 1/2 for 1D, 1/4 for 2D.
+###Fitting a line through the data range specified in the regression window.
+###Note the factor to obtain D from slope; 1/2 for 1D, 1/4 for 2D.
 (slope, B) = regression(times[ts1:th1], col3[ts1:th1])
 print('The effective diffusion D on [{},{}]: {}'.format(ts1, th1, slope/2))
 
-#Plotting the data, MSD vs. time.
+###Plotting the data, MSD vs. time.
 plt.plot(times[ts2:th2], col3[ts2:th2], color = 'blue', label = 'MSD_x')
 #plt.plot(times[ts2:th2], msd_y[ts2:th2], color = 'green', label = 'MSD_y')
 #plt.plot(times[ts2:th2], msd_values[ts2:th2], color = 'red')
 
-#Plotting regression fit and theoretical curves.
-plt.plot(times[ts2:th2], slope*times[ts2:th2] + B, '--r', label = 'LinReg [{},{}]'.format(ts1, th1)) #exact
-plt.plot(times[ts2:th2], 2*0.1*times[ts2:th2], '--g', label = 'exact') #crossing intra to extra
+###Plotting regression fit and theoretical curves.
+plt.plot(times[ts2:th2], slope*times[ts2:th2] + B, '--r', label = 'LinReg [{},{}]'.format(ts1, th1))
+plt.plot(times[ts2:th2], 2*0.05*times[ts2:th2], '--g', label = 'exact')
 
 plt.xscale('log')
 plt.yscale('log')

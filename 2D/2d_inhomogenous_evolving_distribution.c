@@ -121,7 +121,7 @@ int main(){
 	for(i = 0; i <= xL; i++){
 		mask[0][i] = 0;
 	}
-	//j=yL; //why these?
+	//j=yL;
 	for(i = 0; i <= xL; i++){
 		mask[yL][i] = 0;
 	}	
@@ -149,12 +149,15 @@ int main(){
 					mi = i-1;
 					mj = j;
 					if(mask[mj][mi] == 0){
+						//No particles move -x.
 						pnx[j][i] = 0;
 					}
 					else if(mask[mj][mi] == 1){
+						//If adjacent lattice of same type, probability to move left.
 						pnx[j][i] = pnxi;
 					}
 					else if(mask[mj][mi] == 2){
+						//If adjacent lattice of diff type, prod prob to move right.
 						pnx[j][i] = pnxi*pie;
 					}
 					else{
@@ -207,6 +210,7 @@ int main(){
 					}
 
 					//The probability of staying at current lattice site.
+					//Subtraction of all the probabilities of motion at current site.
 					ps[j][i]=1.0-pnx[j][i]-ppx[j][i]-pny[j][i]-ppy[j][i];					
 
 				}
@@ -315,6 +319,13 @@ int main(){
 						pnx[j][i+1]*rho_c[j][i+1] +
 						ppy[j-1][i]*rho_c[j-1][i] +
 						pny[j+1][i]*rho_c[j+1][i];
+
+					//Note the difference from the MC computation for MSD.
+					//Looping over lattice site here, not every particle.
+					//Also, don't include the border lattice points.
+					sum_x +=  (double)i*rho_n[j][i];
+					sum_x2 += (double)i*rho_n[j][i] * (double)i*rho_n[j][i];
+					count += 1;
 				}
 
 				//Total after sum should equal ~1.0 (if N = 1.0).
@@ -324,10 +335,6 @@ int main(){
 				// 	//printf("Arg!          %i %i %f\n",i,j,rho_n[j][i]);
 				// 	//getchar();
 				// }
-				sum_x += (float)i*rho_n[j][i];
-				sum_x2 += (float)i*rho_n[j][i] * (float)i*rho_n[j][i];
-				count += 1;
-
 			}
 		}
 
@@ -347,8 +354,8 @@ int main(){
 		fprintf(outdists, "\n");
 
 		//Writing MSD data to file, done for every time step.
-		avg_x = sum_x/(float)count;
-		avg_x2 = sum_x2/(float)count;
+		avg_x = sum_x/(double)count;
+		avg_x2 = sum_x2/(double)count;
 		fprintf(outstats, "%f %f %f\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
 	}
 }
