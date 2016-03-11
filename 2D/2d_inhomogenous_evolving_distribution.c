@@ -12,14 +12,14 @@ boundary conditions applied.
 #define xE 15
 #define yC 15
 #define yE 15
-#define nU 11
+#define nU 17
 #define mU 1
 
 int main(){
 	//Index variables; for-loops and time-step limit.
 	int i, j;
 	int mi, mj;
-	int t, tmax = 10000;
+	int t, tmax = 50000;
 
 	//Unit cell dimensions.
 	int xU = xC + xE;
@@ -307,7 +307,8 @@ int main(){
 				rho_n[j][i] = 0;
 			}
 		}
-
+					//printf("sum_x %f, sum_x2 %f",sum_x, sum_x2);
+					//getchar();
 		//Loop over all lattice sites and recalculate dds.
 		float rhot = 0;
 		for(j = 0; j <= yL; j++){
@@ -324,7 +325,7 @@ int main(){
 					//Looping over lattice site here, not every particle.
 					//Also, don't include the border lattice points.
 					sum_x +=  (double)i*rho_n[j][i];
-					sum_x2 += (double)i*rho_n[j][i] * (double)i*rho_n[j][i];
+					sum_x2 += pow((double)(i), 2)*rho_n[j][i];
 					count += 1;
 				}
 
@@ -354,8 +355,10 @@ int main(){
 		fprintf(outdists, "\n");
 
 		//Writing MSD data to file, done for every time step.
-		avg_x = sum_x/(double)count;
-		avg_x2 = sum_x2/(double)count;
-		fprintf(outstats, "%f %f %f\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
+		//Don't need to divide by count (the number of lattice sites)
+		// unless N != 1.
+		avg_x = sum_x;
+		avg_x2 = sum_x2;
+		fprintf(outstats, "%lf %lf %lf\n", avg_x, avg_x2, avg_x2-avg_x*avg_x);
 	}
 }
