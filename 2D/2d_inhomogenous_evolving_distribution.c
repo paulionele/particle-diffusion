@@ -12,14 +12,14 @@ boundary conditions applied.
 #define xE 15
 #define yC 15
 #define yE 15
-#define nU 17
+#define nU 11
 #define mU 1
 
 int main(){
 	//Index variables; for-loops and time-step limit.
 	int i, j;
 	int mi, mj;
-	int t, tmax = 50000;
+	int t, tmax = 20000;
 
 	//Unit cell dimensions.
 	int xU = xC + xE;
@@ -91,8 +91,8 @@ int main(){
 	//char *path = "/home/paul/Documents/thesis/particle-diffusion/data/";
 	//char *f1 = strcat(path,"TEST1.txt");
 	//char *f2 = strcat(path,"TEST1-stats.txt");
-	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/FD_t-30k_N-1_nU-21_pi-0.05_pe-0.2_pie-0.01.txt";
-	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/FD_t-30k_N-1_nU-21_pi-0.05_pe-0.2_pie-0.01_stats.txt";
+	char *f1 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/0FD_t-30k_N-1_nU-21_pi-0.05_pe-0.2_pie-0.01.txt";
+	char *f2 = "/home/paul/Documents/thesis/particle-diffusion/2D/2D-data/0FD_t-600k_N-1_nU-41_pi-0.05_pe-0.2_pie-0.01_stats.txt";
 	FILE *outdists, *outstats;
 	outdists = fopen(f1, "w+");
 	outstats = fopen(f2, "w+");
@@ -307,8 +307,7 @@ int main(){
 				rho_n[j][i] = 0;
 			}
 		}
-					//printf("sum_x %f, sum_x2 %f",sum_x, sum_x2);
-					//getchar();
+
 		//Loop over all lattice sites and recalculate dds.
 		float rhot = 0;
 		for(j = 0; j <= yL; j++){
@@ -324,8 +323,9 @@ int main(){
 					//Note the difference from the MC computation for MSD.
 					//Looping over lattice site here, not every particle.
 					//Also, don't include the border lattice points.
+					//pow((double)(i), 2)
 					sum_x +=  (double)i*rho_n[j][i];
-					sum_x2 += pow((double)(i), 2)*rho_n[j][i];
+					sum_x2 += (double)i*(double)i*rho_n[j][i];
 					count += 1;
 				}
 
