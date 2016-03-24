@@ -49,7 +49,7 @@ def extractor(savepath, filename):
   return length, dd, index
 
 N = 500000
-savepath = '/home/paul/Documents/thesis/particle-diffusion/final/animation_stills/heterogeneous_data_11U/'
+savepath = '/home/paul/Documents/thesis/particle-diffusion/Final_1D/animation_stills/heterogeneous_data_11U/'
 files = sorted(os.listdir(savepath))
 
 
