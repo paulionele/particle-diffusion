@@ -38,7 +38,7 @@ def get_msd(savepath, filename):
   return times, msd_x
 
 #Getting a list of file names in current directory (caution!).
-savepath = '/home/paul/Documents/thesis/particle-diffusion/final/analysis_plots/pie_data/'
+savepath = '/home/paul/Documents/thesis/particle-diffusion/Final_1D/analysis_plots/pie_data/'
 files = sorted(os.listdir(savepath))
 
 l = 0 #for label incrementation

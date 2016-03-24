@@ -1,6 +1,6 @@
 '''
 This is a plotting script specific to a set of data, in particular the heterogeneous 1D
-'pie' data where we plot MSD vs. time for varying boundary transition probabilities (pie).
+'pie' data where we plot beta and deff vs. time for varying boundary transition probabilities (pie).
 
 Plots produced are layered onto a single figure. Only ME plots on single figure.
 '''
@@ -47,7 +47,7 @@ def get_beta_deff(savepath, filename):
   return times, deff, log_times, dd, msd_x
 
 #Getting a list of file names in current directory (caution!).
-savepath = '/home/paul/Documents/thesis/particle-diffusion/final/analysis_plots/pie_data/'
+savepath = '/home/paul/Documents/thesis/particle-diffusion/Final_1D/analysis_plots/pie_data/'
 files = sorted(os.listdir(savepath))
 
 l = 0 #for label incrementation
