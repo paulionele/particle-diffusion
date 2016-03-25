@@ -26,7 +26,7 @@ def extractor(savepath, filename):
   '''
   #Need filename to apply appropriate modifications to distribution.
   filepath = os.path.join(savepath, filename)
-  time_capture = 45000
+  time_capture = 19000
   distribution = []
 
   with open(filepath,'r') as f:
@@ -48,8 +48,8 @@ def extractor(savepath, filename):
 
   return length, dd, index
 
-N = 500000
-savepath = '/home/paul/Documents/thesis/particle-diffusion/Final_1D/animation_stills/heterogeneous_data_11U/'
+N = 800000
+savepath = '/home/paul/Documents/thesis/particle-diffusion/Final_1D/animation_stills/heterogeneous_data_3U/'
 files = sorted(os.listdir(savepath))
 
 
@@ -63,7 +63,7 @@ for filename in files:
     #Plot some region-defining lines first so the don't overlay other plots.
     for i in range(0,length):
       if i%15 == 0:
-        plt.plot((i, i), (0, 1/40), color = 'silver', linestyle = '--')
+        plt.plot((i, i), (0, 1/25), color = 'silver', linestyle = '--')
 
     if 'MC' in filename:
       #For the MC plot, data normalization and custom labels.
@@ -71,21 +71,21 @@ for filename in files:
       plt.xlabel('Lattice Site', fontsize = 16)
       plt.ylabel('Density', fontsize = 16)
       plt.xlim(0,length-1)
-      plt.ylim(0,1/40)
-      plt.legend(loc=2)
+      plt.ylim(0,1/33)
+      plt.legend(loc='upper right')
 
     if 'FD' in filename:
       plt.plot(cells, dd, label = 'Master Equation')
       plt.xlabel('Lattice Site', fontsize = 16)
       plt.ylabel('Density', fontsize = 16)
       plt.xlim(0,length-1)
-      plt.ylim(0,1/40)
-      plt.legend(loc=2)
+      plt.ylim(0,1/33)
+      plt.legend(loc='upper right')
 
   else:
     print('Non *.txt hit.')
 
-plt.savefig(savepath + '11U_heterogeneous_plots_1D.pdf')
+plt.savefig(savepath + '3U_heterogeneous_plots_1D.pdf')
 plt.show()
 
 
